@@ -100,8 +100,8 @@ h3 {
 }
 
 em {
-    font-style: normal;
-    color: var(--color-accent-dark);
+    font-style: italic;
+    color: var(--color-text);
 }
 
 /* ===== Buttons ===== */
@@ -417,6 +417,7 @@ em {
 
 .hero-content h1 .line {
     display: block;
+    color: #FFFFFF;
 }
 
 .hero-subtitle {
