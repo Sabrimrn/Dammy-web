@@ -1,16 +1,16 @@
 /* ===== Variables ===== */
 :root {
-    --color-bg: #FAF8F5;
-    --color-bg-dark: #1A1714;
+    --color-bg: #FAFAF8;
+    --color-bg-dark: #1A1C20;
     --color-bg-card: #FFFFFF;
-    --color-text: #1A1714;
-    --color-text-muted: #6B635A;
-    --color-text-light: #9B9288;
-    --color-accent: #C8A97E;
-    --color-accent-light: #E8D5B7;
-    --color-accent-dark: #A07D50;
-    --color-border: #EDE8E0;
-    --color-border-dark: #2A2520;
+    --color-text: #1A1C20;
+    --color-text-muted: #4D5259;
+    --color-text-light: #7A8290;
+    --color-accent: #C54B28;
+    --color-accent-light: #E07050;
+    --color-accent-dark: #9E3518;
+    --color-border: #E8E8E4;
+    --color-border-dark: #2A2D32;
 
     --font-heading: 'DM Serif Display', serif;
     --font-body: 'DM Sans', sans-serif;
