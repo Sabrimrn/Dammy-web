@@ -54,6 +54,30 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 revealElements.forEach(el => revealObserver.observe(el));
 
+// ===== Section Reveal =====
+const sections = document.querySelectorAll('.section');
+
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('section-visible');
+
+            // Stagger children (cards, steps)
+            const children = entry.target.querySelectorAll('.value-card, .service-card, .process-step');
+            children.forEach((child, i) => {
+                setTimeout(() => {
+                    child.classList.add('visible');
+                }, 150 * i);
+            });
+        }
+    });
+}, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -80px 0px'
+});
+
+sections.forEach(s => sectionObserver.observe(s));
+
 // ===== Counter Animation =====
 const statNumbers = document.querySelectorAll('.stat-number[data-count]');
 
