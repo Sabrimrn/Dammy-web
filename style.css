@@ -1,17 +1,19 @@
 /* ===== Variables ===== */
 :root {
-    --color-bg: #FAFAF8;
-    --color-bg-dark: #1A1C20;
-    --color-bg-card: #FFFFFF;
-    --color-text: #1A1C20;
-    --color-text-muted: #4D5259;
-    --color-text-light: #7A8290;
-    --color-accent: #C54B28;
-    --color-accent-light: #E07050;
-    --color-accent-dark: #9E3518;
-    --color-border: #E8E8E4;
-    --color-border-dark: #2A2D32;
+    --color-bg: #F5F3EF;
+    --color-bg-alt: #EAE7E1;
+    --color-bg-dark: #1E1E22;
+    --color-bg-card: #FAF9F6;
+    --color-text: #1E1E22;
+    --color-text-muted: #4D4D52;
+    --color-text-light: #7A7A82;
+    --color-accent: #B8A88A;
+    --color-accent-light: #D4C8AE;
+    --color-accent-dark: #8C7D64;
+    --color-border: #DDD9D2;
+    --color-border-dark: #2E2E34;
 
+    --font-logo: 'Bebas Neue', sans-serif;
     --font-heading: 'DM Serif Display', serif;
     --font-body: 'DM Sans', sans-serif;
 
@@ -99,10 +101,7 @@ h3 {
 
 em {
     font-style: normal;
-    background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--color-accent-dark);
 }
 
 /* ===== Buttons ===== */
@@ -124,9 +123,9 @@ em {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #1A1714 0%, #2D2823 100%);
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(26, 23, 20, 0.2);
+    background: linear-gradient(135deg, #1E1F23 0%, #2E3035 100%);
+    color: #F2F0EC;
+    box-shadow: 0 4px 20px rgba(30, 31, 35, 0.2);
 }
 
 .btn-primary:hover {
@@ -143,14 +142,14 @@ em {
     position: absolute;
     inset: -2px;
     border-radius: 60px;
-    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark), var(--color-accent-light));
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
     z-index: -1;
     opacity: 0;
     transition: opacity 0.4s;
 }
 
 .btn-glow:hover::before {
-    opacity: 1;
+    opacity: 0.6;
 }
 
 .btn-shine {
@@ -182,10 +181,18 @@ em {
 
 .btn-nav {
     padding: 12px 24px;
-    background: var(--color-text);
-    color: #fff;
-    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
     gap: 6px;
+}
+
+.btn-nav:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.35);
 }
 
 .btn-nav:hover {
@@ -210,15 +217,16 @@ em {
     right: 0;
     z-index: 1000;
     padding: 24px 0;
+    background: #1E1F23;
     transition: all 0.4s var(--ease-out);
 }
 
 .navbar.scrolled {
     padding: 16px 0;
-    background: rgba(250, 248, 245, 0.85);
+    background: rgba(30, 31, 35, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(237, 232, 224, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .nav-container {
@@ -234,10 +242,11 @@ em {
 }
 
 .logo-text {
-    font-family: var(--font-heading);
-    font-size: 1.7rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: #FFFFFF;
 }
 
 .logo-dot {
@@ -255,9 +264,11 @@ em {
 }
 
 .nav-links li a {
-    font-size: 0.9rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
     font-weight: 400;
-    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+    color: #FFFFFF;
     transition: color 0.3s;
     position: relative;
 }
@@ -269,12 +280,12 @@ em {
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--color-accent);
+    background: var(--color-accent-light);
     transition: width 0.3s var(--ease-out);
 }
 
 .nav-links li a:not(.btn):hover {
-    color: var(--color-text);
+    color: #FFFFFF;
 }
 
 .nav-links li a:not(.btn):hover::after {
@@ -295,7 +306,7 @@ em {
 .nav-toggle span {
     width: 26px;
     height: 2px;
-    background-color: var(--color-text);
+    background-color: #FFFFFF;
     transition: all 0.3s var(--ease-out);
     border-radius: 2px;
 }
@@ -320,6 +331,7 @@ em {
     position: relative;
     padding: 140px 0 80px;
     overflow: hidden;
+    background: linear-gradient(180deg, #1E1F23 0%, #2A2B30 8%, var(--color-bg) 35%);
 }
 
 .hero .container {
@@ -654,6 +666,7 @@ em {
 /* ===== Marquee ===== */
 .marquee-section {
     padding: 32px 0;
+    background: var(--color-bg-alt);
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
     overflow: hidden;
@@ -697,16 +710,21 @@ em {
 .section {
     padding: 140px 0;
     position: relative;
+    background: var(--color-bg);
+}
+
+.section:nth-of-type(even):not(.section-dark) {
+    background: var(--color-bg-alt);
 }
 
 .section-dark {
-    background-color: var(--color-bg-dark);
+    background-color: #1E1E22;
     color: #fff;
 }
 
 .section-dark .section-tag { color: var(--color-accent-light); }
 .section-dark h2 { color: #fff; }
-.section-dark p { color: rgba(255,255,255,0.6); }
+.section-dark p { color: rgba(255,255,255,0.65); }
 
 .section-header {
     margin-bottom: 72px;
@@ -811,8 +829,8 @@ em {
 
 .service-card-inner {
     padding: 40px 32px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--color-border-dark);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: var(--radius-lg);
     height: 100%;
     position: relative;
@@ -821,8 +839,8 @@ em {
 }
 
 .service-card:hover .service-card-inner {
-    border-color: rgba(200, 169, 126, 0.3);
-    background: rgba(200, 169, 126, 0.03);
+    border-color: rgba(184, 168, 138, 0.3);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .service-card-glow {
@@ -974,12 +992,13 @@ em {
 /* ===== CTA Section ===== */
 .cta-section {
     padding: 80px 0;
+    background: var(--color-bg-alt);
 }
 
 .cta-card {
     text-align: center;
     padding: 80px 60px;
-    background: linear-gradient(135deg, var(--color-bg-dark) 0%, #2D2520 100%);
+    background: linear-gradient(135deg, #1E1E22 0%, #2A2A30 100%);
     border-radius: var(--radius-xl);
     position: relative;
     overflow: hidden;
@@ -1134,7 +1153,7 @@ em {
 /* ===== Footer ===== */
 .footer {
     padding: 80px 0 32px;
-    background: #0F0D0B;
+    background: #18181C;
     color: #fff;
 }
 
@@ -1149,7 +1168,7 @@ em {
     display: inline-flex;
 }
 
-.footer-brand .logo .logo-text { color: #fff; }
+.footer-brand .logo .logo-text { color: #F2F0EC; }
 
 .footer-brand p {
     font-size: 0.88rem;
@@ -1273,14 +1292,14 @@ em {
         right: -100%;
         width: 300px;
         height: 100vh;
-        background-color: var(--color-bg);
+        background-color: #1E1F23;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
         gap: 28px;
         padding: 60px 40px;
         transition: right 0.5s var(--ease-out);
-        box-shadow: -20px 0 60px rgba(0, 0, 0, 0.1);
+        box-shadow: -20px 0 60px rgba(0, 0, 0, 0.3);
     }
 
     .nav-links.active {

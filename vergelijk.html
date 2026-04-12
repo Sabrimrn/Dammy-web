@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dammy — Logo Vergelijking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #F7F6F3;
+            color: #1A1C20;
+            padding: 60px 32px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #5A5A65;
+            margin-bottom: 60px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #FFFFFF;
+            border: 1px solid #E8E8E4;
+            border-radius: 20px;
+            padding: 48px 36px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+        }
+        .card-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #8A8A95;
+            margin-bottom: 32px;
+        }
+        .logo-preview {
+            margin-bottom: 32px;
+            padding: 24px 0;
+        }
+        .logo-a {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 3rem;
+            color: #3A3D42;
+            letter-spacing: -0.02em;
+        }
+        .logo-b {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-weight: 600;
+            font-size: 3rem;
+            color: #3A3D42;
+            letter-spacing: -0.01em;
+        }
+        .logo-c {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-weight: 600;
+            font-size: 3rem;
+            color: #3A3D42;
+            letter-spacing: -0.01em;
+        }
+        .description {
+            font-size: 0.85rem;
+            color: #7A8290;
+            line-height: 1.7;
+        }
+        .tags {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .tag {
+            font-size: 0.72rem;
+            padding: 6px 12px;
+            background: #F4F3F0;
+            border-radius: 50px;
+            color: #5A5A65;
+            font-weight: 500;
+        }
+
+        /* Navbar previews */
+        .nav-preview {
+            background: #F7F6F3;
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+        .nav-preview .nav-logo-a {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #3A3D42;
+        }
+        .nav-preview .nav-logo-b {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #3A3D42;
+        }
+        .nav-preview .nav-logo-c {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #3A3D42;
+        }
+        .nav-links-fake {
+            display: flex;
+            gap: 16px;
+        }
+        .nav-links-fake span {
+            font-size: 0.75rem;
+            color: #8A8A95;
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Kies je favoriet — Logo stijl voor Dammy</h1>
+
+    <div class="grid">
+        <!-- Optie A -->
+        <div class="card">
+            <div class="card-label">Optie A</div>
+            <div class="logo-preview">
+                <span class="logo-a">Dammy</span>
+            </div>
+            <p class="description">Outfit Bold — strak, geometrisch, modern. Zelfverzekerd en professioneel.</p>
+            <div class="tags">
+                <span class="tag">Modern</span>
+                <span class="tag">Tech</span>
+                <span class="tag">Clean</span>
+            </div>
+            <div class="nav-preview">
+                <span class="nav-logo-a">Dammy</span>
+                <div class="nav-links-fake">
+                    <span>Over ons</span>
+                    <span>Diensten</span>
+                    <span>Contact</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optie B -->
+        <div class="card">
+            <div class="card-label">Optie B</div>
+            <div class="logo-preview">
+                <span class="logo-b">Dammy</span>
+            </div>
+            <p class="description">Bricolage Grotesque Semibold — rond, warm, benaderbaar. Jong en friendly.</p>
+            <div class="tags">
+                <span class="tag">Warm</span>
+                <span class="tag">Friendly</span>
+                <span class="tag">Jong</span>
+            </div>
+            <div class="nav-preview">
+                <span class="nav-logo-b">Dammy</span>
+                <div class="nav-links-fake">
+                    <span>Over ons</span>
+                    <span>Diensten</span>
+                    <span>Contact</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optie C -->
+        <div class="card">
+            <div class="card-label">Optie C — Combi</div>
+            <div class="logo-preview">
+                <span class="logo-c">Dammy</span>
+            </div>
+            <p class="description">Bricolage Grotesque logo + Outfit headings op de site. Het beste van beide werelden.</p>
+            <div class="tags">
+                <span class="tag">Menselijk</span>
+                <span class="tag">Professioneel</span>
+                <span class="tag">Balans</span>
+            </div>
+            <div class="nav-preview">
+                <span class="nav-logo-c">Dammy</span>
+                <div class="nav-links-fake">
+                    <span>Over ons</span>
+                    <span>Diensten</span>
+                    <span>Contact</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
