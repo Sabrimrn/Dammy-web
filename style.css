@@ -1,17 +1,17 @@
 /* ===== Variables ===== */
 :root {
-    --color-bg: #F5F3EF;
-    --color-bg-alt: #EAE7E1;
-    --color-bg-dark: #1E1E22;
-    --color-bg-card: #FAF9F6;
-    --color-text: #1E1E22;
-    --color-text-muted: #4D4D52;
-    --color-text-light: #7A7A82;
-    --color-accent: #B8A88A;
-    --color-accent-light: #D4C8AE;
-    --color-accent-dark: #8C7D64;
-    --color-border: #DDD9D2;
-    --color-border-dark: #2E2E34;
+    --color-bg: #E8E0D4;
+    --color-bg-alt: #DDD4C6;
+    --color-bg-dark: #1A1A1A;
+    --color-bg-card: #F0EAE0;
+    --color-text: #1A1A1A;
+    --color-text-muted: #3D3D3D;
+    --color-text-light: #6B6B6B;
+    --color-accent: #1A1A1A;
+    --color-accent-light: #FFFFFF;
+    --color-accent-dark: #000000;
+    --color-border: #D0C7B8;
+    --color-border-dark: #2A2A2A;
 
     --font-logo: 'Bebas Neue', sans-serif;
     --font-heading: 'DM Serif Display', serif;
@@ -217,13 +217,13 @@ em {
     right: 0;
     z-index: 1000;
     padding: 24px 0;
-    background: #1E1F23;
+    background: #1A1A1A;
     transition: all 0.4s var(--ease-out);
 }
 
 .navbar.scrolled {
     padding: 16px 0;
-    background: rgba(30, 31, 35, 0.95);
+    background: rgba(26, 26, 26, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -331,7 +331,7 @@ em {
     position: relative;
     padding: 140px 0 80px;
     overflow: hidden;
-    background: linear-gradient(180deg, #1E1F23 0%, #2A2B30 8%, var(--color-bg) 35%);
+    background: linear-gradient(180deg, #1A1A1A 0%, #2A2A2A 8%, var(--color-bg) 35%);
 }
 
 .hero .container {
@@ -719,13 +719,15 @@ em {
 }
 
 .section-dark {
-    background-color: #1E1E22;
-    color: #fff;
+    background-color: var(--color-bg-alt);
+    color: var(--color-text);
+    position: relative;
 }
 
-.section-dark .section-tag { color: var(--color-accent-light); }
-.section-dark h2 { color: #fff; }
-.section-dark p { color: rgba(255,255,255,0.65); }
+.section-dark .section-tag { color: var(--color-text-light); }
+.section-dark h2 { color: var(--color-text); }
+.section-dark p { color: var(--color-text-muted); }
+
 
 .section-header {
     margin-bottom: 72px;
@@ -849,8 +851,8 @@ em {
     top: 0;
     left: 0;
     right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-text), transparent);
     opacity: 0;
     transition: opacity 0.4s;
 }
@@ -865,10 +867,10 @@ em {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(200, 169, 126, 0.1);
+    background: var(--color-text);
     border-radius: 14px;
     margin-bottom: 24px;
-    color: var(--color-accent-light);
+    color: #FFFFFF;
 }
 
 .service-label {
@@ -884,13 +886,13 @@ em {
 .service-card h3 {
     font-family: var(--font-body);
     font-size: 1.15rem;
-    color: #fff;
+    color: var(--color-text);
     margin-bottom: 12px;
 }
 
 .service-card p {
     font-size: 0.88rem;
-    color: rgba(255,255,255,0.5);
+    color: var(--color-text-muted);
     line-height: 1.7;
     margin-bottom: 20px;
 }
@@ -903,7 +905,7 @@ em {
 
 .service-features li {
     font-size: 0.82rem;
-    color: rgba(255,255,255,0.4);
+    color: var(--color-text-light);
     padding-left: 18px;
     position: relative;
 }
@@ -916,8 +918,8 @@ em {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-accent);
-    opacity: 0.6;
+    background: var(--color-text);
+    opacity: 0.3;
 }
 
 /* ===== Process ===== */
