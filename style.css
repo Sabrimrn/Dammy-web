@@ -1,17 +1,17 @@
 /* ===== Variables ===== */
 :root {
-    --color-bg: #F5F0E8;
-    --color-bg-alt: #EBE5DA;
-    --color-bg-dark: #1E1E1E;
+    --color-bg: #FAF8F5;
+    --color-bg-alt: #F3F0EB;
+    --color-bg-dark: #000000;
     --color-bg-card: #FFFFFF;
-    --color-text: #2D2A26;
-    --color-text-muted: #5C5650;
-    --color-text-light: #8A8279;
-    --color-accent: #6B7A2F;
-    --color-accent-light: #8A9E45;
-    --color-accent-dark: #505C22;
-    --color-border: #DDD6C9;
-    --color-border-dark: #2E2E2E;
+    --color-text: #000000;
+    --color-text-muted: #444444;
+    --color-text-light: #888888;
+    --color-accent: #8A9E6C;
+    --color-accent-light: #A3B588;
+    --color-accent-dark: #6E8450;
+    --color-border: #E5E1DA;
+    --color-border-dark: #222222;
 
     --font-logo: 'Bebas Neue', sans-serif;
     --font-heading: 'DM Serif Display', serif;
@@ -58,7 +58,7 @@ ul { list-style: none; }
     width: 600px;
     height: 600px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(107, 122, 47, 0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(138, 158, 108, 0.05) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
     transform: translate(-50%, -50%);
@@ -101,7 +101,7 @@ h3 {
 
 em {
     font-style: italic;
-    color: var(--color-accent);
+    color: var(--color-text);
 }
 
 /* ===== Buttons ===== */
@@ -123,9 +123,9 @@ em {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #2D2A26 0%, #3A3632 100%);
-    color: #F5F0E8;
-    box-shadow: 0 4px 20px rgba(45, 42, 38, 0.2);
+    background: #000000;
+    color: #FFFFFF;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:hover {
@@ -181,9 +181,9 @@ em {
 
 .btn-nav {
     padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #FFFFFF;
+    background: #000000;
+    border: 1px solid #000000;
+    color: #FFFFFF !important;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 1.1rem;
     letter-spacing: 0.05em;
@@ -191,8 +191,8 @@ em {
 }
 
 .btn-nav:hover {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: #222222;
+    border-color: #222222;
 }
 
 .btn-nav:hover {
@@ -217,16 +217,16 @@ em {
     right: 0;
     z-index: 1000;
     padding: 24px 0;
-    background: #3D3830;
+    background: #FFFFFF;
     transition: all 0.4s var(--ease-out);
 }
 
 .navbar.scrolled {
     padding: 16px 0;
-    background: rgba(61, 56, 48, 0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .nav-container {
@@ -246,7 +246,7 @@ em {
     font-size: 1.8rem;
     font-weight: 400;
     letter-spacing: 0.06em;
-    color: #FFFFFF;
+    color: #000000;
 }
 
 .logo-dot {
@@ -268,7 +268,7 @@ em {
     font-size: 1.1rem;
     font-weight: 400;
     letter-spacing: 0.05em;
-    color: #FFFFFF;
+    color: #000000;
     transition: color 0.3s;
     position: relative;
 }
@@ -280,12 +280,12 @@ em {
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--color-accent-light);
+    background: #000000;
     transition: width 0.3s var(--ease-out);
 }
 
 .nav-links li a:not(.btn):hover {
-    color: #FFFFFF;
+    color: #000000;
 }
 
 .nav-links li a:not(.btn):hover::after {
@@ -306,7 +306,7 @@ em {
 .nav-toggle span {
     width: 26px;
     height: 2px;
-    background-color: #FFFFFF;
+    background-color: #000000;
     transition: all 0.3s var(--ease-out);
     border-radius: 2px;
 }
@@ -331,7 +331,7 @@ em {
     position: relative;
     padding: 140px 0 80px;
     overflow: hidden;
-    background: linear-gradient(180deg, #3D3830 0%, #5A5145 8%, var(--color-bg) 35%);
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--color-bg) 15%);
 }
 
 .hero .container {
@@ -358,7 +358,7 @@ em {
 .shape-1 {
     width: 500px;
     height: 500px;
-    background: rgba(107, 122, 47, 0.15);
+    background: rgba(214, 208, 198, 0.3);
     top: -10%;
     right: 10%;
     animation: float 20s ease-in-out infinite;
@@ -367,7 +367,7 @@ em {
 .shape-2 {
     width: 400px;
     height: 400px;
-    background: rgba(221, 214, 201, 0.2);
+    background: rgba(240, 235, 227, 0.3);
     bottom: 10%;
     left: -5%;
     animation: float 25s ease-in-out infinite reverse;
@@ -376,7 +376,7 @@ em {
 .shape-3 {
     width: 300px;
     height: 300px;
-    background: rgba(138, 158, 69, 0.12);
+    background: rgba(163, 181, 136, 0.1);
     top: 50%;
     right: 30%;
     animation: float 15s ease-in-out infinite 5s;
@@ -417,7 +417,7 @@ em {
 
 .hero-content h1 .line {
     display: block;
-    color: #FFFFFF;
+    color: #000000;
 }
 
 .hero-content h1 em {
@@ -717,7 +717,7 @@ em {
     padding: 48px 0;
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
-    background: var(--color-bg-alt);
+    background: #FFFFFF;
     overflow: hidden;
 }
 
@@ -784,12 +784,12 @@ em {
 }
 
 .section-dark {
-    background-color: #DED5C5;
+    background-color: #F3F0EB;
     color: var(--color-text);
     position: relative;
 }
 
-.section-dark .section-tag { color: var(--color-accent); }
+.section-dark .section-tag { color: var(--color-text-light); }
 .section-dark h2 { color: var(--color-text); }
 .section-dark p { color: var(--color-text-muted); }
 
@@ -804,7 +804,7 @@ em {
     font-weight: 500;
     font-family: 'SF Mono', 'Fira Code', monospace;
     letter-spacing: 1px;
-    color: var(--color-accent-dark);
+    color: var(--color-text-light);
     margin-bottom: 16px;
 }
 
@@ -862,9 +862,9 @@ em {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(107, 122, 47, 0.1);
+    background: var(--color-bg);
     border-radius: 12px;
-    color: var(--color-accent);
+    color: var(--color-text);
 }
 
 .value-card h3 {
@@ -932,17 +932,17 @@ em {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(107, 122, 47, 0.1);
+    background: var(--color-bg);
     border-radius: 14px;
     margin-bottom: 24px;
-    color: var(--color-accent);
+    color: var(--color-text);
 }
 
 .service-label {
     font-family: var(--font-heading);
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--color-accent);
+    color: var(--color-text-light);
     letter-spacing: 1px;
     margin-bottom: 12px;
     display: block;
@@ -983,8 +983,8 @@ em {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-accent);
-    opacity: 0.5;
+    background: var(--color-text);
+    opacity: 0.2;
 }
 
 /* ===== Process ===== */
@@ -1039,7 +1039,7 @@ em {
 }
 
 .process-step:hover .step-number {
-    color: var(--color-accent);
+    color: var(--color-text);
 }
 
 .step-content h3 {
@@ -1066,7 +1066,7 @@ em {
 .cta-card {
     text-align: center;
     padding: 80px 60px;
-    background: linear-gradient(135deg, #3D3830 0%, #4A443B 100%);
+    background: #000000;
     border-radius: var(--radius-xl);
     position: relative;
     overflow: hidden;
@@ -1075,7 +1075,7 @@ em {
 .cta-bg-pattern {
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(rgba(107, 122, 47, 0.15) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
     background-size: 30px 30px;
     opacity: 0.5;
 }
@@ -1146,9 +1146,9 @@ em {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(107, 122, 47, 0.1);
+    background: var(--color-bg);
     border-radius: 10px;
-    color: var(--color-accent);
+    color: var(--color-text);
     flex-shrink: 0;
 }
 
@@ -1208,9 +1208,9 @@ em {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--color-accent);
+    border-color: var(--color-text);
     background: #FFFFFF;
-    box-shadow: 0 0 0 3px rgba(107, 122, 47, 0.1);
+    box-shadow: none;
 }
 
 .form-group textarea {
@@ -1221,7 +1221,7 @@ em {
 /* ===== Footer ===== */
 .footer {
     padding: 80px 0 32px;
-    background: #332E28;
+    background: #000000;
     color: #fff;
 }
 
@@ -1236,7 +1236,7 @@ em {
     display: inline-flex;
 }
 
-.footer-brand .logo .logo-text { color: #F5F0E8; }
+.footer-brand .logo .logo-text { color: #FFFFFF; }
 
 .footer-brand p {
     font-size: 0.88rem;
@@ -1303,8 +1303,8 @@ em {
 }
 
 .footer-socials a:hover {
-    background: rgba(107, 122, 47, 0.2);
-    color: var(--color-accent-light);
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
     transform: translateY(-2px);
 }
 
