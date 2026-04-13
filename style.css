@@ -880,6 +880,14 @@ em {
 }
 
 /* ===== Services ===== */
+.services-intro {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+    max-width: 680px;
+    margin-bottom: 48px;
+}
+
 .services-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
