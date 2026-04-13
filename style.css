@@ -191,8 +191,8 @@ em {
 }
 
 .btn-nav:hover {
-    background: #222222;
-    border-color: #222222;
+    background: var(--color-accent) !important;
+    border-color: var(--color-accent);
 }
 
 .btn-nav:hover {
@@ -280,12 +280,12 @@ em {
     left: 0;
     width: 0;
     height: 2px;
-    background: #000000;
+    background: var(--color-accent);
     transition: width 0.3s var(--ease-out);
 }
 
 .nav-links li a:not(.btn):hover {
-    color: #000000;
+    color: var(--color-accent);
 }
 
 .nav-links li a:not(.btn):hover::after {
