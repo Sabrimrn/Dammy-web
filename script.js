@@ -157,10 +157,34 @@ setTimeout(typeEffect, 1500);
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
+        const href = this.getAttribute('href');
+        const target = document.querySelector(href);
+        if (!target) return;
+
+        // Scroll naar top voor hero
+        if (href === '#hero') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
         }
+
+        const navHeight = document.getElementById('navbar').offsetHeight;
+        const viewportHeight = window.innerHeight;
+        const rect = target.getBoundingClientRect();
+        const sectionHeight = rect.height;
+        const sectionTop = rect.top + window.scrollY;
+
+        let scrollTo;
+        if (sectionHeight < viewportHeight - navHeight) {
+            // Centreer de sectie verticaal in de zichtbare viewport onder de navbar
+            const availableSpace = viewportHeight - navHeight;
+            const offset = (availableSpace - sectionHeight) / 2;
+            scrollTo = sectionTop - navHeight - offset;
+        } else {
+            // Grotere sectie: gewoon onder navbar plakken met beetje ruimte
+            scrollTo = sectionTop - navHeight - 20;
+        }
+
+        window.scrollTo({ top: scrollTo, behavior: 'smooth' });
     });
 });
 
