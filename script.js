@@ -169,18 +169,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         const navHeight = document.getElementById('navbar').offsetHeight;
         const viewportHeight = window.innerHeight;
-        // offsetTop/offsetHeight zijn niet beïnvloed door CSS transforms (reveal animaties)
         const sectionTop = target.offsetTop;
         const sectionHeight = target.offsetHeight;
 
-        let scrollTo;
-        if (sectionHeight + navHeight < viewportHeight) {
-            // Sectie past in het scherm: centreer hem volledig in de viewport
-            scrollTo = sectionTop - (viewportHeight - sectionHeight) / 2;
-        } else {
-            // Sectie is groter dan viewport: plaats onder navbar
-            scrollTo = sectionTop - navHeight - 20;
-        }
+        // Midden van sectie uitlijnen met midden van zichtbaar gebied onder navbar
+        const sectionCenter = sectionTop + sectionHeight / 2;
+        const visibleCenter = navHeight + (viewportHeight - navHeight) / 2;
+        const scrollTo = sectionCenter - visibleCenter;
 
         window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
     });
