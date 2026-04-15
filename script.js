@@ -169,22 +169,20 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         const navHeight = document.getElementById('navbar').offsetHeight;
         const viewportHeight = window.innerHeight;
-        const rect = target.getBoundingClientRect();
-        const sectionHeight = rect.height;
-        const sectionTop = rect.top + window.scrollY;
+        // offsetTop/offsetHeight zijn niet beïnvloed door CSS transforms (reveal animaties)
+        const sectionTop = target.offsetTop;
+        const sectionHeight = target.offsetHeight;
 
         let scrollTo;
-        if (sectionHeight < viewportHeight - navHeight) {
-            // Centreer de sectie verticaal in de zichtbare viewport onder de navbar
-            const availableSpace = viewportHeight - navHeight;
-            const offset = (availableSpace - sectionHeight) / 2;
-            scrollTo = sectionTop - navHeight - offset;
+        if (sectionHeight + navHeight < viewportHeight) {
+            // Sectie past in het scherm: centreer hem volledig in de viewport
+            scrollTo = sectionTop - (viewportHeight - sectionHeight) / 2;
         } else {
-            // Grotere sectie: gewoon onder navbar plakken met beetje ruimte
+            // Sectie is groter dan viewport: plaats onder navbar
             scrollTo = sectionTop - navHeight - 20;
         }
 
-        window.scrollTo({ top: scrollTo, behavior: 'smooth' });
+        window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
     });
 });
 
