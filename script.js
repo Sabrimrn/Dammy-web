@@ -184,26 +184,51 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // ===== Contact Form =====
 const contactForm = document.getElementById('contact-form');
 
-contactForm.addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const btn = contactForm.querySelector('button[type="submit"]');
     const btnSpan = btn.querySelector('span');
     const originalText = btnSpan.textContent;
 
-    // Animate button
     btn.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        btn.style.transform = '';
-        btnSpan.textContent = 'Verstuurd!';
-        btn.style.background = 'linear-gradient(135deg, #4A7C59, #3D6B4A)';
+    btnSpan.textContent = 'Verzenden...';
+    btn.disabled = true;
 
-        setTimeout(() => {
-            btnSpan.textContent = originalText;
-            btn.style.background = '';
+    try {
+        const formData = new FormData(contactForm);
+        const data = Object.fromEntries(formData.entries());
+
+        const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        btn.style.transform = '';
+
+        if (response.ok) {
+            btnSpan.textContent = 'Verstuurd!';
+            btn.style.background = 'linear-gradient(135deg, #4A7C59, #3D6B4A)';
             contactForm.reset();
-        }, 3000);
-    }, 200);
+        } else {
+            btnSpan.textContent = 'Er ging iets mis';
+            btn.style.background = 'linear-gradient(135deg, #B85450, #8B3A36)';
+        }
+    } catch (err) {
+        btn.style.transform = '';
+        btnSpan.textContent = 'Geen verbinding';
+        btn.style.background = 'linear-gradient(135deg, #B85450, #8B3A36)';
+    }
+
+    setTimeout(() => {
+        btnSpan.textContent = originalText;
+        btn.style.background = '';
+        btn.disabled = false;
+    }, 4000);
 });
 
 // ===== Parallax on hero shapes =====
