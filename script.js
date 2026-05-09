@@ -1,36 +1,158 @@
 // ===== Cursor Glow =====
 const cursorGlow = document.getElementById('cursor-glow');
-
+let cursorX = window.innerWidth / 2, cursorY = window.innerHeight / 2;
+let glowX = cursorX, glowY = cursorY;
 document.addEventListener('mousemove', (e) => {
-    cursorGlow.style.left = e.clientX + 'px';
-    cursorGlow.style.top = e.clientY + 'px';
+    cursorX = e.clientX; cursorY = e.clientY;
+    document.body.classList.add('has-cursor');
 });
+function lerpCursor() {
+    glowX += (cursorX - glowX) * 0.12;
+    glowY += (cursorY - glowY) * 0.12;
+    if (cursorGlow) {
+        cursorGlow.style.left = glowX + 'px';
+        cursorGlow.style.top = glowY + 'px';
+    }
+    requestAnimationFrame(lerpCursor);
+}
+lerpCursor();
 
-// ===== Navbar =====
-const navbar = document.getElementById('navbar');
-let lastScroll = 0;
+// ===== Starfield Canvas =====
+function createStarfield(canvas, opts = {}) {
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const count = opts.count || 200;
+    const layers = 3;
+    let w, h;
+    let stars = [];
+    let mouseX = 0, mouseY = 0;
 
-window.addEventListener('scroll', () => {
-    const currentScroll = window.scrollY;
+    function resize() {
+        const rect = canvas.getBoundingClientRect();
+        w = rect.width; h = rect.height;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
+        stars = [];
+        for (let i = 0; i < count; i++) {
+            const layer = Math.floor(Math.random() * layers);
+            stars.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                z: layer,
+                size: 0.4 + (layer * 0.5) + Math.random() * 0.8,
+                baseAlpha: 0.3 + Math.random() * 0.7,
+                twinkleSpeed: 0.5 + Math.random() * 2,
+                twinkleOffset: Math.random() * Math.PI * 2,
+                vx: (Math.random() - 0.5) * 0.04 * (layer + 1),
+                vy: (Math.random() - 0.5) * 0.04 * (layer + 1),
+            });
+        }
+    }
+    resize();
+    window.addEventListener('resize', resize);
 
-    if (currentScroll > 60) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+    if (opts.parallax) {
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5);
+            mouseY = (e.clientY / window.innerHeight - 0.5);
+        });
     }
 
-    lastScroll = currentScroll;
+    let scrollY = 0;
+    if (opts.scrollParallax) {
+        window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+    }
+
+    function tick(t) {
+        ctx.clearRect(0, 0, w, h);
+        const time = t / 1000;
+        for (const s of stars) {
+            s.x += s.vx;
+            s.y += s.vy;
+            if (s.x < 0) s.x = w;
+            if (s.x > w) s.x = 0;
+            if (s.y < 0) s.y = h;
+            if (s.y > h) s.y = 0;
+            const px = s.x + (opts.parallax ? mouseX * (s.z + 1) * 12 : 0);
+            const py = s.y + (opts.parallax ? mouseY * (s.z + 1) * 12 : 0)
+                          - (opts.scrollParallax ? scrollY * 0.05 * (s.z + 1) : 0);
+            const twinkle = 0.5 + 0.5 * Math.sin(time * s.twinkleSpeed + s.twinkleOffset);
+            const alpha = s.baseAlpha * (0.4 + 0.6 * twinkle);
+            ctx.beginPath();
+            ctx.fillStyle = `rgba(138, 158, 108, ${alpha * 0.55})`;
+            ctx.arc(px, py, s.size, 0, Math.PI * 2);
+            ctx.fill();
+            // glow on bright stars
+            if (s.z === 2) {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(138, 158, 108, ${alpha * 0.12})`;
+                ctx.arc(px, py, s.size * 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        // shooting star
+        if (opts.shootingStars && Math.random() < 0.0035) {
+            shootingStars.push({
+                x: Math.random() * w * 0.6,
+                y: Math.random() * h * 0.4,
+                len: 80 + Math.random() * 60,
+                angle: Math.PI / 6 + (Math.random() - 0.5) * 0.4,
+                speed: 8 + Math.random() * 4,
+                life: 1
+            });
+        }
+        for (const ss of shootingStars) {
+            ss.x += Math.cos(ss.angle) * ss.speed;
+            ss.y += Math.sin(ss.angle) * ss.speed;
+            ss.life -= 0.018;
+            if (ss.life > 0) {
+                const tx = ss.x - Math.cos(ss.angle) * ss.len;
+                const ty = ss.y - Math.sin(ss.angle) * ss.len;
+                const grad = ctx.createLinearGradient(tx, ty, ss.x, ss.y);
+                grad.addColorStop(0, 'rgba(138, 158, 108, 0)');
+                grad.addColorStop(1, `rgba(138, 158, 108, ${ss.life * 0.7})`);
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(tx, ty);
+                ctx.lineTo(ss.x, ss.y);
+                ctx.stroke();
+            }
+        }
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+            if (shootingStars[i].life <= 0) shootingStars.splice(i, 1);
+        }
+        requestAnimationFrame(tick);
+    }
+    const shootingStars = [];
+    requestAnimationFrame(tick);
+}
+
+document.querySelectorAll('.star-canvas').forEach(c => {
+    createStarfield(c, { count: 280, parallax: true, scrollParallax: true, shootingStars: true });
+});
+document.querySelectorAll('.section-stars').forEach(c => {
+    createStarfield(c, { count: 100, parallax: true });
+});
+document.querySelectorAll('.cta-stars').forEach(c => {
+    createStarfield(c, { count: 80 });
 });
 
-// ===== Mobile Menu =====
+// ===== Navbar scroll =====
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+});
+
+// ===== Mobile menu =====
 const navToggle = document.getElementById('nav-toggle');
 const navLinks = document.getElementById('nav-links');
-
 navToggle.addEventListener('click', () => {
     navLinks.classList.toggle('active');
     navToggle.classList.toggle('active');
 });
-
 navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
         navLinks.classList.remove('active');
@@ -38,227 +160,133 @@ navLinks.querySelectorAll('a').forEach(link => {
     });
 });
 
-// ===== Scroll Reveal =====
-const revealElements = document.querySelectorAll('.reveal');
-
+// ===== Reveal =====
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
         }
     });
-}, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -60px 0px'
-});
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-revealElements.forEach(el => revealObserver.observe(el));
-
-// ===== Section Reveal =====
-const sections = document.querySelectorAll('.section');
-
-const sectionObserver = new IntersectionObserver((entries) => {
+const staggerObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('section-visible');
-
-            // Stagger children (cards, steps)
             const children = entry.target.querySelectorAll('.value-card, .service-card, .process-step');
-            children.forEach((child, i) => {
-                setTimeout(() => {
-                    child.classList.add('visible');
-                }, 150 * i);
-            });
+            children.forEach((child, i) => setTimeout(() => child.classList.add('visible'), 110 * i));
+            staggerObserver.unobserve(entry.target);
         }
     });
-}, {
-    threshold: 0.08,
-    rootMargin: '0px 0px -80px 0px'
-});
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.section').forEach(s => staggerObserver.observe(s));
 
-sections.forEach(s => sectionObserver.observe(s));
-
-// ===== Counter Animation =====
-const statNumbers = document.querySelectorAll('.stat-number[data-count]');
-
-const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const target = entry.target;
-            const count = parseInt(target.getAttribute('data-count'));
-            animateCounter(target, count);
-            counterObserver.unobserve(target);
-        }
-    });
-}, { threshold: 0.5 });
-
-statNumbers.forEach(el => counterObserver.observe(el));
-
-function animateCounter(element, target) {
-    let current = 0;
-    const duration = 2000;
-    const step = target / (duration / 16);
-
-    function update() {
-        current += step;
-        if (current >= target) {
-            element.textContent = target;
-            return;
-        }
-        element.textContent = Math.floor(current);
-        requestAnimationFrame(update);
-    }
-    requestAnimationFrame(update);
+// ===== Word morph =====
+const morphEl = document.querySelector('.word-morph .word');
+const morphWords = ['groei', 'impact', 'innovatie', 'succes'];
+let morphIdx = 0;
+function morphNext() {
+    if (!morphEl) return;
+    morphEl.classList.add('exiting');
+    setTimeout(() => {
+        morphIdx = (morphIdx + 1) % morphWords.length;
+        morphEl.textContent = morphWords[morphIdx];
+        morphEl.classList.remove('exiting');
+        morphEl.classList.add('entering');
+        requestAnimationFrame(() => morphEl.classList.remove('entering'));
+    }, 500);
 }
+setInterval(morphNext, 3000);
 
-// ===== Typing Animation =====
-const typingText = document.querySelector('.typing-text');
-const phrases = [
-    'Hoe kan AI ons wervingsproces verbeteren?',
-    'We willen een chatbot voor onze klanten.',
-    'Waar beginnen we met AI-implementatie?',
-    'Kan AI onze data-analyse automatiseren?'
-];
-
-let phraseIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-let typingSpeed = 60;
-
-function typeEffect() {
-    const currentPhrase = phrases[phraseIndex];
-
-    if (isDeleting) {
-        typingText.textContent = currentPhrase.substring(0, charIndex - 1);
-        charIndex--;
-        typingSpeed = 30;
-    } else {
-        typingText.textContent = currentPhrase.substring(0, charIndex + 1);
-        charIndex++;
-        typingSpeed = 60;
-    }
-
-    if (!isDeleting && charIndex === currentPhrase.length) {
-        isDeleting = true;
-        typingSpeed = 2000; // Pause at end
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        typingSpeed = 500; // Pause before new phrase
-    }
-
-    setTimeout(typeEffect, typingSpeed);
-}
-
-// Start typing after a delay
-setTimeout(typeEffect, 1500);
-
-// ===== Smooth Scroll =====
+// ===== Smooth scroll =====
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const href = this.getAttribute('href');
-        const target = document.querySelector(href);
-        if (!target) return;
-
-        // Scroll naar top voor hero
-        if (href === '#hero') {
+        if (href === '#hero' || href === '#') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
-
+        const target = document.querySelector(href);
+        if (!target) return;
         const navHeight = document.getElementById('navbar').offsetHeight;
-        const viewportHeight = window.innerHeight;
-        const sectionTop = target.offsetTop;
-        const sectionHeight = target.offsetHeight;
-
-        // Midden van sectie uitlijnen met midden van zichtbaar gebied onder navbar
-        const sectionCenter = sectionTop + sectionHeight / 2;
-        const visibleCenter = navHeight + (viewportHeight - navHeight) / 2;
-        const scrollTo = sectionCenter - visibleCenter;
-
-        window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+        const top = target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
+        window.scrollTo({ top, behavior: 'smooth' });
     });
 });
 
-// ===== Contact Form =====
+// ===== Contact form =====
 const contactForm = document.getElementById('contact-form');
-
-contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const btn = contactForm.querySelector('button[type="submit"]');
-    const btnSpan = btn.querySelector('span');
-    const originalText = btnSpan.textContent;
-
-    btn.style.transform = 'scale(0.95)';
-    btnSpan.textContent = 'Verzenden...';
-    btn.disabled = true;
-
-    try {
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData.entries());
-
-        const response = await fetch(contactForm.action, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        });
-
-        btn.style.transform = '';
-
-        if (response.ok) {
-            btnSpan.textContent = 'Verstuurd!';
-            btn.style.background = 'linear-gradient(135deg, #4A7C59, #3D6B4A)';
-            contactForm.reset();
-        } else {
-            btnSpan.textContent = 'Er ging iets mis';
-            btn.style.background = 'linear-gradient(135deg, #B85450, #8B3A36)';
-        }
-    } catch (err) {
-        btn.style.transform = '';
-        btnSpan.textContent = 'Geen verbinding';
-        btn.style.background = 'linear-gradient(135deg, #B85450, #8B3A36)';
-    }
-
-    setTimeout(() => {
-        btnSpan.textContent = originalText;
-        btn.style.background = '';
-        btn.disabled = false;
-    }, 4000);
-});
-
-// ===== Parallax on hero shapes =====
-window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
-    const shapes = document.querySelectorAll('.shape');
-
-    shapes.forEach((shape, i) => {
-        const speed = (i + 1) * 0.03;
-        shape.style.transform = `translateY(${scrolled * speed}px)`;
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = contactForm.querySelector('button[type="submit"]');
+        const span = btn.querySelector('span');
+        const original = span.textContent;
+        btn.disabled = true; span.textContent = 'Verzenden...';
+        try {
+            const data = Object.fromEntries(new FormData(contactForm).entries());
+            const res = await fetch(contactForm.action, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            span.textContent = res.ok ? 'Verstuurd!' : 'Er ging iets mis';
+            if (res.ok) contactForm.reset();
+        } catch { span.textContent = 'Geen verbinding'; }
+        setTimeout(() => { span.textContent = original; btn.disabled = false; }, 3500);
     });
-});
+}
 
-// ===== Service card tilt effect =====
-const serviceCards = document.querySelectorAll('.service-card');
-
-serviceCards.forEach(card => {
+// ===== Service tilt + glow position =====
+document.querySelectorAll('.service-card').forEach(card => {
     card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 20;
-        const rotateY = (centerX - x) / 20;
-
-        card.style.transform = `translateY(-8px) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        const rotateX = (y - rect.height / 2) / 28;
+        const rotateY = (rect.width / 2 - x) / 28;
+        card.style.transform = `translateY(-12px) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
 
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
+// Value cards mouse position glow
+document.querySelectorAll('.value-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100) + '%');
+        card.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
     });
 });
+
+// ===== Magnetic buttons =====
+document.querySelectorAll('.btn-magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.15}px, ${y * 0.25}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
+
+// ===== Hero parallax tilt on scroll =====
+const heroContent = document.querySelector('.hero-content');
+const heroOrb = document.querySelector('.hero-orb');
+window.addEventListener('scroll', () => {
+    const s = window.scrollY;
+    if (heroContent) heroContent.style.transform = `translateY(${s * 0.25}px)`;
+    if (heroOrb) heroOrb.style.transform = `translate(-50%, calc(-50% + ${s * 0.15}px)) scale(${1 + s * 0.0003})`;
+});
+
+// ===== Mouse-follow tilt for hero h1 =====
+const heroH1 = document.querySelector('.hero-content h1');
+if (heroH1) {
+    document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5);
+        const y = (e.clientY / window.innerHeight - 0.5);
+        heroH1.style.transform = `perspective(1200px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
+    });
+}

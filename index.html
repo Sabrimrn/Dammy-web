@@ -3,71 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" href="favicon-32x32.png">
 
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q4MFBL7P7P"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-Q4MFBL7P7P');
-    </script>
     <title>Dammy — AI Automatisering voor Bedrijven</title>
-    <meta name="description" content="Dammy is een AI-bureau in Amsterdam. Wij helpen bedrijven slimmer werken met AI-automatisering, data-analyse en slimme workflows. Persoonlijk en op maat.">
+    <meta name="description" content="Dammy is een AI-bureau in Amsterdam. Wij helpen bedrijven slimmer werken met AI-automatisering, data-analyse en slimme workflows.">
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://www.dammy.nl/">
-
-    <!-- Robots -->
-    <meta name="robots" content="index, follow">
-
-    <!-- Open Graph (LinkedIn, WhatsApp, Facebook) -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.dammy.nl/">
-    <meta property="og:title" content="Dammy — AI Automatisering voor Bedrijven">
-    <meta property="og:description" content="Wij helpen bedrijven slimmer werken met AI-automatisering, data-analyse en slimme workflows. Persoonlijk en op maat gemaakt in Amsterdam.">
-    <meta property="og:locale" content="nl_NL">
-    <meta property="og:site_name" content="Dammy">
-
-    <!-- Twitter/X card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Dammy — AI Automatisering voor Bedrijven">
-    <meta name="twitter:description" content="Wij helpen bedrijven slimmer werken met AI-automatisering, data-analyse en slimme workflows. Persoonlijk en op maat gemaakt in Amsterdam.">
-
-    <!-- Schema markup (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Dammy",
-      "url": "https://www.dammy.nl",
-      "email": "contact@dammy.nl",
-      "description": "AI-bureau in Amsterdam dat bedrijven helpt slimmer te werken met AI-automatisering, data-analyse en maatwerk workflows.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Amsterdam",
-        "addressCountry": "NL"
-      },
-      "areaServed": "NL",
-      "serviceType": [
-        "AI Automatisering",
-        "Data Analyse",
-        "Workflow Automatisering",
-        "AI Strategie"
-      ],
-      "sameAs": []
-    }
-    </script>
-
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Cursor glow effect -->
+
     <div class="cursor-glow" id="cursor-glow"></div>
 
     <!-- Navigation -->
@@ -77,35 +24,37 @@
                 <span class="logo-text">DAMMY.</span>
             </a>
             <button class="nav-toggle" id="nav-toggle" aria-label="Menu openen">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span></span><span></span><span></span>
             </button>
             <ul class="nav-links" id="nav-links">
                 <li><a href="#over-ons">Over ons</a></li>
                 <li><a href="#diensten">Diensten</a></li>
                 <li><a href="#aanpak">Aanpak</a></li>
-                <li><a href="#contact" class="btn btn-nav">Start een gesprek <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></li>
+                <li><a href="#contact" class="btn btn-nav btn-magnetic">Start een gesprek
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-        <div class="hero-bg-shapes">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
+    <!-- ===== HERO — SPACE ===== -->
+    <section class="hero" id="hero" data-screen-label="01 Hero">
+        <div class="hero-orb"></div>
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
+        <div class="aurora aurora-3"></div>
+        <div class="grid-floor"></div>
+        <div class="hero-scanlines"></div>
+
         <div class="container">
             <div class="hero-content">
-                <h1 class="reveal reveal-delay-1">
-                    <span class="line">Wij bouwen mee</span>
-                    <span class="line"><em>aan jouw groei</em></span>
+                <h1>
+                    <span class="line"><span class="line-inner">Wij bouwen mee</span></span>
+                    <span class="line"><span class="line-inner">aan jouw <span class="word-morph"><span class="word">groei</span></span></span></span>
                 </h1>
-                <p class="hero-subtitle reveal reveal-delay-2">Dammy helpt je bedrijf groeien met oplossingen die het werk makkelijker maken. Persoonlijk, toegankelijk en altijd op maat.</p>
-                <div class="hero-cta reveal reveal-delay-3">
-                    <a href="#contact" class="btn btn-primary btn-glow">
+                <p class="hero-subtitle">Dammy helpt je bedrijf groeien met oplossingen die het werk makkelijker maken. Persoonlijk, toegankelijk en altijd op maat.</p>
+                <div class="hero-cta">
+                    <a href="#contact" class="btn btn-primary btn-magnetic">
                         <span>Laten we praten</span>
                         <div class="btn-shine"></div>
                     </a>
@@ -115,54 +64,16 @@
                     </a>
                 </div>
             </div>
-            <div class="hero-visual reveal reveal-delay-2">
-                <div class="hero-card">
-                    <div class="card-glow"></div>
-                    <div class="card-content">
-                        <div class="card-header">
-                            <div class="card-dots">
-                                <span></span><span></span><span></span>
-                            </div>
-                            <span class="card-title">dammy.ai</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="typing-animation">
-                                <span class="typing-text"></span>
-                                <span class="typing-cursor">|</span>
-                            </div>
-                            <div class="card-response">
-                                <div class="response-avatar">D</div>
-                                <div class="response-bubble">
-                                    <div class="response-dots">
-                                        <span></span><span></span><span></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="floating-tag tag-1">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    Snel & slim
-                </div>
-                <div class="floating-tag tag-2">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                    Menselijk
-                </div>
-                <div class="floating-tag tag-3">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                    Op maat
-                </div>
-            </div>
         </div>
+
         <div class="scroll-indicator">
+            <span class="scroll-text">Scroll</span>
             <div class="scroll-line"></div>
         </div>
     </section>
 
-
-    <!-- Over Ons -->
-    <section class="section" id="over-ons">
+    <!-- ===== Over ons ===== -->
+    <section class="section" id="over-ons" data-screen-label="02 Over ons">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag reveal">// Over ons</span>
@@ -178,53 +89,63 @@
                     <p><strong>Echte groei begint met echte connectie.</strong></p>
                 </div>
                 <div class="values-grid">
-                    <div class="value-card reveal">
+                    <div class="value-card">
                         <div class="value-icon-wrapper">
                             <div class="value-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                             </div>
                         </div>
-                        <h3>Menselijk</h3>
-                        <p>Automatisering die mensen helpt, niet vervangt. Tools die je team versterken.</p>
+                        <div>
+                            <h3>Menselijk</h3>
+                            <p>Automatisering die mensen helpt, niet vervangt. Tools die je team versterken.</p>
+                        </div>
                     </div>
-                    <div class="value-card reveal reveal-delay-1">
+                    <div class="value-card">
                         <div class="value-icon-wrapper">
                             <div class="value-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
                             </div>
                         </div>
-                        <h3>Op maat</h3>
-                        <p>Geen standaard aanpak. Elk bedrijf is uniek en verdient maatwerk.</p>
+                        <div>
+                            <h3>Op maat</h3>
+                            <p>Geen standaard aanpak. Elk bedrijf is uniek en verdient maatwerk.</p>
+                        </div>
                     </div>
-                    <div class="value-card reveal reveal-delay-2">
+                    <div class="value-card">
                         <div class="value-icon-wrapper">
                             <div class="value-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
                             </div>
                         </div>
-                        <h3>Impact</h3>
-                        <p>Resultaten die direct verschil maken. Meetbaar en merkbaar.</p>
+                        <div>
+                            <h3>Impact</h3>
+                            <p>Resultaten die direct verschil maken. Meetbaar en merkbaar.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Diensten -->
-    <section class="section section-dark" id="diensten">
+    <!-- ===== Diensten (DARK SPACE) ===== -->
+    <section class="section section-dark" id="diensten" data-screen-label="03 Diensten">
+        <canvas class="section-stars"></canvas>
         <div class="container">
             <div class="section-header">
                 <span class="section-tag reveal">// Diensten</span>
                 <h2 class="reveal reveal-delay-1">Wat we voor je <em>kunnen bouwen</em></h2>
+                <p class="services-intro reveal reveal-delay-2">Wij helpen bedrijven vooruit door slim in te zetten waar het direct verschil maakt. Van interne processen tot klantcontact.</p>
             </div>
-            <p class="services-intro reveal">Wij helpen bedrijven vooruit door slim in te zetten waar het direct verschil maakt. Van interne processen tot klantcontact.</p>
+
             <div class="services-grid">
-                <div class="service-card reveal">
+                <div class="service-card">
                     <div class="service-card-inner">
-                        <div class="service-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                        <div class="service-icon-wrap">
+                            <div class="service-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                            </div>
+                            <span class="service-label">01 / 03</span>
                         </div>
-                        <span class="service-label">01</span>
                         <h3>Interne processen</h3>
                         <p>Dashboards, workflow automatisering en interne tooling die je team tijd bespaart en overzicht geeft.</p>
                         <ul class="service-features">
@@ -233,15 +154,17 @@
                             <li>Interne rapportages</li>
                             <li>Procesoptimalisatie</li>
                         </ul>
-                        <div class="service-card-glow"></div>
                     </div>
                 </div>
-                <div class="service-card reveal reveal-delay-1">
+
+                <div class="service-card">
                     <div class="service-card-inner">
-                        <div class="service-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        <div class="service-icon-wrap">
+                            <div class="service-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            </div>
+                            <span class="service-label">02 / 03</span>
                         </div>
-                        <span class="service-label">02</span>
                         <h3>Data analyse</h3>
                         <p>Slimme inzichten uit je bestaande data. Patronen herkennen, voorspellingen doen en beter beslissen.</p>
                         <ul class="service-features">
@@ -250,15 +173,17 @@
                             <li>Retentie en churn inzichten</li>
                             <li>Performance monitoring</li>
                         </ul>
-                        <div class="service-card-glow"></div>
                     </div>
                 </div>
-                <div class="service-card reveal reveal-delay-2">
+
+                <div class="service-card">
                     <div class="service-card-inner">
-                        <div class="service-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+                        <div class="service-icon-wrap">
+                            <div class="service-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+                            </div>
+                            <span class="service-label">03 / 03</span>
                         </div>
-                        <span class="service-label">03</span>
                         <h3>Outreach en externe processen</h3>
                         <p>Klantcommunicatie, lead generatie en externe workflows slimmer en persoonlijker maken.</p>
                         <ul class="service-features">
@@ -267,81 +192,65 @@
                             <li>Klantcommunicatie optimalisatie</li>
                             <li>Externe rapportages</li>
                         </ul>
-                        <div class="service-card-glow"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Aanpak -->
-    <section class="section" id="aanpak">
+    <!-- ===== Aanpak ===== -->
+    <section class="section" id="aanpak" data-screen-label="04 Aanpak">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag reveal">// Aanpak</span>
-                <h2 class="reveal reveal-delay-1">Van idee tot<br><em>impact</em></h2>
+                <h2 class="reveal reveal-delay-1">Van idee tot <em>impact</em></h2>
             </div>
+
             <div class="process-timeline">
-                <div class="process-step reveal">
-                    <div class="step-number">01</div>
+                <div class="process-step">
+                    <div class="step-number-circle">01</div>
                     <div class="step-content">
                         <h3>Kennismaking</h3>
                         <p>We leren je bedrijf kennen in een informeel gesprek. Wat zijn je uitdagingen? Waar liggen de kansen?</p>
                     </div>
-                    <div class="step-visual">
-                        <div class="step-icon-circle">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                        </div>
-                    </div>
                 </div>
-                <div class="process-step reveal reveal-delay-1">
-                    <div class="step-number">02</div>
+
+                <div class="process-step">
+                    <div class="step-number-circle">02</div>
                     <div class="step-content">
                         <h3>Strategie</h3>
                         <p>Op basis van onze analyse maken we een helder plan. Concrete stappen met duidelijke resultaten.</p>
                     </div>
-                    <div class="step-visual">
-                        <div class="step-icon-circle">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                        </div>
-                    </div>
                 </div>
-                <div class="process-step reveal reveal-delay-2">
-                    <div class="step-number">03</div>
+
+                <div class="process-step">
+                    <div class="step-number-circle">03</div>
                     <div class="step-content">
                         <h3>Bouwen</h3>
                         <p>Iteratief en transparant. Je bent altijd op de hoogte en kunt bijsturen wanneer je wilt.</p>
                     </div>
-                    <div class="step-visual">
-                        <div class="step-icon-circle">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                        </div>
-                    </div>
                 </div>
-                <div class="process-step reveal reveal-delay-3">
-                    <div class="step-number">04</div>
+
+                <div class="process-step">
+                    <div class="step-number-circle">04</div>
                     <div class="step-content">
-                        <h3>Lancering & Groei</h3>
+                        <h3>Lancering &amp; Groei</h3>
                         <p>Na oplevering blijven we betrokken. Monitoren, optimaliseren en meeschalen met je groei.</p>
-                    </div>
-                    <div class="step-visual">
-                        <div class="step-icon-circle">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="section cta-section">
+    <!-- ===== CTA ===== -->
+    <section class="section cta-section" data-screen-label="05 CTA">
         <div class="container">
             <div class="cta-card reveal">
-                <div class="cta-bg-pattern"></div>
-                <h2>Klaar om je bedrijf te<br>transformeren met AI?</h2>
+                <canvas class="cta-stars"></canvas>
+                <div class="cta-glow"></div>
+                <h2>Klaar om je bedrijf te<br>transformeren met <em>AI?</em></h2>
                 <p>Laten we samen ontdekken wat mogelijk is. Geen verplichtingen, wel inspiratie.</p>
-                <a href="#contact" class="btn btn-primary btn-glow btn-large">
+                <a href="#contact" class="btn btn-primary btn-large btn-magnetic">
                     <span>Plan een vrijblijvend gesprek</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     <div class="btn-shine"></div>
@@ -350,8 +259,9 @@
         </div>
     </section>
 
-    <!-- Contact -->
-    <section class="section section-dark" id="contact">
+    <!-- ===== Contact (DARK SPACE) ===== -->
+    <section class="section section-dark" id="contact" data-screen-label="06 Contact">
+        <canvas class="section-stars"></canvas>
         <div class="container">
             <div class="contact-wrapper">
                 <div class="contact-info reveal">
@@ -379,6 +289,7 @@
                         </div>
                     </div>
                 </div>
+
                 <form class="contact-form reveal reveal-delay-1" id="contact-form" action="/api/contact" method="POST">
                     <div class="form-row">
                         <div class="form-group">
@@ -398,7 +309,7 @@
                         <label for="message">Bericht</label>
                         <textarea id="message" name="message" rows="5" placeholder="Vertel ons over je project of uitdaging..." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-glow btn-full">
+                    <button type="submit" class="btn btn-primary btn-full btn-large">
                         <span>Verstuur bericht</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
                         <div class="btn-shine"></div>
@@ -408,14 +319,13 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ===== Footer ===== -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <a href="#" class="logo">
+                    <a href="#hero" class="logo">
                         <span class="logo-text">DAMMY.</span>
-                        <span class="logo-dot"></span>
                     </a>
                     <p>AI automatisering met een menselijke touch.</p>
                 </div>
@@ -431,7 +341,7 @@
                         <h4>Diensten</h4>
                         <a href="#diensten">Interne processen</a>
                         <a href="#diensten">AI data analyse</a>
-                        <a href="#diensten">Outreach en externe processen</a>
+                        <a href="#diensten">Outreach</a>
                     </div>
                 </div>
             </div>
@@ -439,16 +349,16 @@
                 <p>&copy; 2025 Dammy. Alle rechten voorbehouden.</p>
                 <div class="footer-socials">
                     <a href="#" aria-label="LinkedIn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                     </a>
                     <a href="#" aria-label="Instagram">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
                     </a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>
