@@ -8,7 +8,7 @@
     <title>Dammy — AI Automatisering voor Bedrijven</title>
     <meta name="description" content="Dammy is een AI-bureau in Amsterdam. Wij helpen bedrijven slimmer werken met AI-automatisering, data-analyse en slimme workflows.">
 
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -359,6 +359,58 @@
         </div>
     </footer>
 
-    <script src="script.js?v=4"></script>
+    <!-- ===== Chatbot Widget ===== -->
+    <div class="chat-widget" id="chat-widget">
+        <button class="chat-toggle" id="chat-toggle" aria-label="Open chat met Dammy">
+            <span class="chat-toggle-icon chat-icon-open">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <span class="chat-toggle-icon chat-icon-close">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+            <span class="chat-pulse"></span>
+        </button>
+
+        <div class="chat-panel" id="chat-panel" aria-hidden="true">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar">
+                        <span>D.</span>
+                    </div>
+                    <div class="chat-header-text">
+                        <div class="chat-header-name">Dammy</div>
+                        <div class="chat-header-status"><span class="chat-status-dot"></span> Online</div>
+                    </div>
+                </div>
+                <button class="chat-close" id="chat-close" aria-label="Sluit chat">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-message chat-message-bot">
+                    <div class="chat-bubble">
+                        Hoi! Ik ben Dammy, de digitale assistent van het team. Wat kan ik voor je betekenen? Vraag me gerust over onze diensten, aanpak, of of we bij jouw bedrijf passen.
+                    </div>
+                </div>
+            </div>
+
+            <form class="chat-input-form" id="chat-input-form">
+                <input
+                    type="text"
+                    class="chat-input"
+                    id="chat-input"
+                    placeholder="Stel je vraag..."
+                    autocomplete="off"
+                    maxlength="500"
+                />
+                <button type="submit" class="chat-send" id="chat-send" aria-label="Verstuur bericht">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js?v=5"></script>
 </body>
 </html>
