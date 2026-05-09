@@ -1,21 +1,12 @@
 // ===== Cursor Glow =====
 const cursorGlow = document.getElementById('cursor-glow');
-let cursorX = window.innerWidth / 2, cursorY = window.innerHeight / 2;
-let glowX = cursorX, glowY = cursorY;
 document.addEventListener('mousemove', (e) => {
-    cursorX = e.clientX; cursorY = e.clientY;
     document.body.classList.add('has-cursor');
-});
-function lerpCursor() {
-    glowX += (cursorX - glowX) * 0.12;
-    glowY += (cursorY - glowY) * 0.12;
     if (cursorGlow) {
-        cursorGlow.style.left = glowX + 'px';
-        cursorGlow.style.top = glowY + 'px';
+        cursorGlow.style.left = e.clientX + 'px';
+        cursorGlow.style.top = e.clientY + 'px';
     }
-    requestAnimationFrame(lerpCursor);
-}
-lerpCursor();
+});
 
 // ===== Starfield Canvas =====
 function createStarfield(canvas, opts = {}) {
