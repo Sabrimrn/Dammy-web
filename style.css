@@ -310,8 +310,8 @@ em { font-style: italic; font-family: 'DM Serif Display', serif; }
 
 .hero-content h1 {
     font-size: clamp(2.6rem, 7.5vw, 6.5rem);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
     margin-bottom: 36px;
     transition: transform 0.4s ease-out;
     color: #2A2826;
@@ -319,7 +319,7 @@ em { font-style: italic; font-family: 'DM Serif Display', serif; }
 .hero-content h1 .line {
     display: block;
     overflow: hidden;
-    padding: 0.05em 0;
+    padding: 0.18em 0.05em;
 }
 .hero-content h1 .line-inner {
     display: block;
