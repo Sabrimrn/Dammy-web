@@ -86,7 +86,7 @@ h1 { font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; }
 .hero-subtitle { font-size: 17px; color: var(--text-mid); max-width: 440px; line-height: 1.6; margin-bottom: 28px; opacity: 0; animation: fade-up 0.7s var(--ease) 0.9s forwards; }
 @keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; opacity: 0; animation: fade-up 0.7s var(--ease) 1.05s forwards; }
-.hero-tagline { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; letter-spacing: 0.01em; color: var(--text); margin-top: 44px; opacity: 0; animation: fade-up 0.7s var(--ease) 1.25s forwards; }
+.hero-tagline { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; letter-spacing: 0.01em; color: var(--green-dim); margin-top: 44px; opacity: 0; animation: fade-up 0.7s var(--ease) 1.25s forwards; }
 .scroll-indicator { position: absolute; bottom: 32px; left: 36px; display: flex; align-items: center; gap: 12px; opacity: 0; animation: fade-up 0.7s var(--ease) 1.5s forwards; }
 .scroll-text { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-soft); }
 .scroll-line { width: 36px; height: 1px; background: linear-gradient(to right, var(--green), transparent); animation: scroll-pulse 2.5s ease-in-out infinite; }
