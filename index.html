@@ -14,6 +14,7 @@
 
     <!-- Open Graph (LinkedIn, Facebook, WhatsApp) -->
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Dammy">
     <meta property="og:url" content="https://www.dammy.nl/">
     <meta property="og:title" content="Dammy | AI automatisering voor jouw bedrijf">
     <meta property="og:description" content="Wij bouwen dashboards, data-modellen en AI-integraties voor Nederlandse bedrijven. Op maat, vaste prijs, gebouwd voor jouw team.">
@@ -23,6 +24,36 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Dammy | AI automatisering voor jouw bedrijf">
     <meta name="twitter:description" content="Wij bouwen dashboards, data-modellen en AI-integraties voor Nederlandse bedrijven.">
+
+    <!-- Structured Data: WebSite + Organization (voor Google site name) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": "https://www.dammy.nl/#website",
+                "url": "https://www.dammy.nl/",
+                "name": "Dammy",
+                "description": "AI automatisering voor jouw bedrijf",
+                "inLanguage": "nl-NL"
+            },
+            {
+                "@type": "Organization",
+                "@id": "https://www.dammy.nl/#organization",
+                "name": "Dammy",
+                "url": "https://www.dammy.nl/",
+                "logo": "https://www.dammy.nl/favicon-32x32.png",
+                "email": "contact@dammy.nl",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Amsterdam",
+                    "addressCountry": "NL"
+                }
+            }
+        ]
+    }
+    </script>
 
     <link rel="stylesheet" href="style.css?v=19">
     <link rel="preconnect" href="https://fonts.googleapis.com">
