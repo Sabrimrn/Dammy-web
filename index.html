@@ -55,12 +55,14 @@
     }
     </script>
 
-    <link rel="stylesheet" href="style.css?v=19">
+    <link rel="stylesheet" href="style.css?v=21">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
@@ -80,6 +82,7 @@
 
     <!-- ===== HERO ===== -->
     <section class="hero" id="hero">
+        <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
         <div class="container">
             <div class="hero-content">
                 <h1 class="hero-headline">Wij bouwen AI-tools die jouw team daadwerkelijk gaat gebruiken.</h1>
@@ -91,6 +94,9 @@
                     </a>
                 </div>
                 <p class="hero-tagline">// Gevestigd in Amsterdam. We bouwen AI-tools voor Nederlandse bedrijven die er écht mee aan de slag willen.</p>
+            </div>
+            <div class="hero-visual">
+                <img src="img/hero.jpg" alt="Aan het werk met laptop en telefoon" loading="eager">
             </div>
         </div>
         <div class="scroll-indicator">
@@ -198,6 +204,10 @@
                     <p>Als je nu met ons begint, zit je in de eerste lichting. Dat betekent: meer directe aandacht dan wanneer we straks voller zitten. We hebben ruimte voor één of twee nieuwe projecten dit kwartaal.</p>
                 </div>
             </div>
+            <!-- PLACEHOLDER FOTO 2: vervang door eigen foto (breed, bijv. jullie drie of de werkplek) -->
+            <div class="nu-bezig-photo reveal">
+                <img src="https://picsum.photos/seed/dammy-team/1600/640?grayscale" alt="" loading="lazy">
+            </div>
         </div>
     </section>
 
@@ -239,6 +249,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=14"></script>
 </body>
 </html>
