@@ -1,16 +1,150 @@
-// ===== Hero word-by-word animation =====
+// =====================================================================
+// Setup
+// =====================================================================
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+const navbar = document.getElementById('navbar');
+const heroEl = document.querySelector('.hero');
+
+// ===== Hero headline: rotating headlines with decode effect + light sheen =====
 const heroH1 = document.querySelector('.hero-headline');
 if (heroH1) {
-    const text = heroH1.textContent.trim();
-    heroH1.innerHTML = text.split(' ').map((word, i) =>
-        `<span class="hw" style="animation-delay:${0.08 + i * 0.07}s">${word}</span>`
-    ).join(' ');
+    const HEADLINES = [
+        heroH1.textContent.trim(),
+        'AI die in jouw systemen werkt, niet in een apart tabblad.',
+        'Eén vaste prijs. Geen uurtjes, geen verrassingen halverwege.'
+    ];
+    const SHOW_MS = 5000;
+    const CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/_#*';
+    const rnd = () => CH[Math.floor(Math.random() * CH.length)];
+    const keep = (ch) => /[-.,]/.test(ch);
+    const scrambleWord = (w) => [...w].map(ch => keep(ch) ? ch : rnd()).join('');
+    const build = (text) => {
+        heroH1.innerHTML = text.split(/\s+/).map(w => `<span class="hw">${w}</span>`).join(' ');
+        return [...heroH1.querySelectorAll('.hw')];
+    };
+    heroH1.classList.add('decoding', 'sheen');
+
+    if (reduceMotion) {
+        build(HEADLINES[0]);
+    } else {
+        let spans = build(HEADLINES[0]);
+        let idx = 0, busy = false;
+
+        // Hoogte vastzetten op de langste zin zodat de hero niet verspringt bij het wisselen
+        const lockHeight = () => {
+            let max = 0;
+            HEADLINES.forEach(t => { build(t); max = Math.max(max, heroH1.offsetHeight); });
+            heroH1.style.minHeight = max + 'px';
+            spans = build(HEADLINES[idx]);
+        };
+
+        const decodeIn = (targets, delay) => new Promise(resolve => {
+            // Breedte per woord vastzetten (gemeten op de echte tekst) zodat regels niet verspringen
+            spans.forEach(s => { s.style.width = s.getBoundingClientRect().width + 'px'; });
+            spans.forEach((s, i) => { s.textContent = scrambleWord(targets[i]); });
+            const t0 = performance.now() + delay;
+            const DUR = 650, STAG = 110;
+            const tick = (now) => {
+                let allDone = true;
+                spans.forEach((s, i) => {
+                    const target = targets[i];
+                    const p = (now - (t0 + i * STAG)) / DUR;
+                    if (p < 0) { s.textContent = scrambleWord(target); allDone = false; return; }
+                    if (p >= 1) { if (s.textContent !== target) s.textContent = target; return; }
+                    allDone = false;
+                    const solved = Math.floor(p * target.length);
+                    let out = target.slice(0, solved);
+                    for (let k = solved; k < target.length; k++) out += keep(target[k]) ? target[k] : rnd();
+                    s.textContent = out;
+                });
+                if (allDone) { spans.forEach(s => { s.style.width = ''; }); resolve(); }
+                else requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        });
+
+        const scrambleOut = (ms) => new Promise(resolve => {
+            const targets = spans.map(s => s.textContent);
+            spans.forEach(s => { s.style.width = s.getBoundingClientRect().width + 'px'; });
+            const t0 = performance.now();
+            const tick = (now) => {
+                const p = Math.min((now - t0) / ms, 1);
+                spans.forEach((s, i) => {
+                    const target = targets[i];
+                    const n = Math.ceil(p * target.length * 1.4);
+                    let out = '';
+                    for (let k = 0; k < target.length; k++) out += (k < n && !keep(target[k])) ? rnd() : target[k];
+                    s.textContent = out;
+                });
+                if (p >= 1) resolve(); else requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        });
+
+        const rotate = async () => {
+            if (busy || document.hidden || heroH1.matches(':hover')) return;
+            busy = true;
+            await scrambleOut(320);
+            idx = (idx + 1) % HEADLINES.length;
+            spans = build(HEADLINES[idx]);
+            await decodeIn(HEADLINES[idx].split(/\s+/), 0);
+            busy = false;
+        };
+
+        const start = async () => {
+            lockHeight();
+            busy = true;
+            await decodeIn(HEADLINES[0].split(/\s+/), 150);
+            busy = false;
+            setInterval(rotate, SHOW_MS);
+        };
+        (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start);
+        window.addEventListener('resize', () => { if (!busy) lockHeight(); });
+    }
 }
 
-// ===== Navbar =====
-const navbar = document.getElementById('navbar');
+// =====================================================================
+// Navbar + mobile menu
+// =====================================================================
 const navSections = document.querySelectorAll('section[id]');
 const navAnchors = document.querySelectorAll('.nav-links a:not(.btn-nav)');
+const navToggle = document.getElementById('nav-toggle');
+const navLinks = document.getElementById('nav-links');
+
+// Rol-effect: linktekst twee keer in een venster, bij hover schuift de bovenste weg
+navAnchors.forEach(a => {
+    const text = a.textContent.trim();
+    a.innerHTML = `<span class="nav-roll"><span>${text}</span><span>${text}</span></span>`;
+});
+
+// Logo: letters één voor één in, daarna glans bij hover
+const logoText = document.querySelector('.logo-text');
+if (logoText) {
+    const text = logoText.textContent;
+    if (reduceMotion) {
+        logoText.classList.add('sheen');
+    } else {
+        logoText.innerHTML = [...text].map((ch, i) => `<span class="lc" style="animation-delay:${0.1 + i * 0.06}s">${ch}</span>`).join('');
+        setTimeout(() => { logoText.textContent = text; logoText.classList.add('sheen'); }, 1000);
+    }
+}
+
+// Glijdende indicator onder de actieve (of gehoverde) link
+const navIndicator = document.createElement('span');
+navIndicator.className = 'nav-indicator';
+navLinks.appendChild(navIndicator);
+let activeAnchor = null;
+function moveIndicator(a) {
+    if (!a || window.innerWidth <= 768) { navIndicator.classList.remove('show'); return; }
+    navIndicator.style.transform = `translateX(${a.offsetLeft + 10}px)`;
+    navIndicator.style.width = `${Math.max(a.offsetWidth - 20, 0)}px`;
+    navIndicator.classList.add('show');
+}
+navAnchors.forEach(a => a.addEventListener('mouseenter', () => moveIndicator(a)));
+navLinks.addEventListener('mouseleave', () => moveIndicator(activeAnchor));
 
 function updateActiveNav() {
     const scrollY = window.scrollY;
@@ -21,15 +155,14 @@ function updateActiveNav() {
         const top = section.offsetTop - 120;
         if (scrollY >= top) current = section.getAttribute('id');
     });
+    activeAnchor = null;
     navAnchors.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+        const isActive = a.getAttribute('href') === '#' + current;
+        a.classList.toggle('active', isActive);
+        if (isActive) activeAnchor = a;
     });
+    if (!navLinks.matches(':hover')) moveIndicator(activeAnchor);
 }
-window.addEventListener('scroll', updateActiveNav);
-
-// ===== Mobile menu =====
-const navToggle = document.getElementById('nav-toggle');
-const navLinks = document.getElementById('nav-links');
 navToggle.addEventListener('click', () => {
     navLinks.classList.toggle('active');
     navToggle.classList.toggle('active');
@@ -41,7 +174,9 @@ navLinks.querySelectorAll('a').forEach(link => {
     });
 });
 
-// ===== Reveal on scroll =====
+// =====================================================================
+// Reveal on scroll
+// =====================================================================
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -52,7 +187,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-// ===== Stagger: service cards (150ms each) =====
+// Stagger: service cards (150ms each)
 const cardStagger = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -67,23 +202,9 @@ const cardStagger = new IntersectionObserver((entries) => {
 const servicesGrid = document.querySelector('.services-grid');
 if (servicesGrid) cardStagger.observe(servicesGrid);
 
-// ===== Stagger: process steps (100ms each) =====
-const stepStagger = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const steps = entry.target.querySelectorAll('.process-step');
-            steps.forEach((step, i) => {
-                setTimeout(() => step.classList.add('visible'), 100 * i);
-            });
-            entry.target.classList.add('drawn');
-            stepStagger.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-const timeline = document.querySelector('.process-timeline');
-if (timeline) stepStagger.observe(timeline);
-
-// ===== Smooth scroll =====
+// =====================================================================
+// Smooth scroll
+// =====================================================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -100,7 +221,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===== Contact form =====
+// =====================================================================
+// Contact form
+// =====================================================================
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -129,141 +252,36 @@ if (contactForm) {
 // =====================================================================
 // Motion layer
 // =====================================================================
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 // ===== Scroll progress bar =====
 const progressBar = document.getElementById('scroll-progress');
-if (progressBar) {
-    const updateProgress = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        progressBar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
-    };
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    window.addEventListener('resize', updateProgress);
-    updateProgress();
+function updateProgress() {
+    if (!progressBar) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
 }
 
-// ===== Hero: particle network =====
-const heroCanvas = document.getElementById('hero-canvas');
-if (heroCanvas && !reduceMotion) {
-    const ctx = heroCanvas.getContext('2d');
-    const hero = heroCanvas.parentElement;
-    const isMobile = window.innerWidth < 768;
-    const LINK = isMobile ? 80 : 120;
-    const MAX_SPEED = 0.55;
-    const mouse = { x: -9999, y: -9999 };
-    let w = 0, h = 0, particles = [], running = true, rafId = null;
-
-    function resize() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        w = hero.clientWidth;
-        h = hero.clientHeight;
-        heroCanvas.width = w * dpr;
-        heroCanvas.height = h * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const count = Math.min(Math.round((w * h) / (isMobile ? 45000 : 32000)), 45);
-        particles = Array.from({ length: count }, () => ({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
-            r: 1 + Math.random() * 1.5
-        }));
+// ===== Hero: 3D tilt + scroll depth (one combined transform) =====
+const heroContent = document.querySelector('.hero-content');
+const heroPhoto = document.querySelector('.hero-photo');
+const heroState = { tx: 0, ty: 0, sy: 0 };
+function applyHero() {
+    if (!heroContent || !heroEl || reduceMotion) return;
+    const p = clamp(heroState.sy / heroEl.offsetHeight, 0, 1);
+    heroContent.style.transform = `perspective(1200px) rotateX(${-heroState.ty * 2.5}deg) rotateY(${heroState.tx * 2.5}deg) translateY(${heroState.sy * 0.18}px) scale(${1 - p * 0.08})`;
+    heroContent.style.opacity = String(1 - p * 0.7);
+    if (heroPhoto) {
+        heroPhoto.style.transform = `perspective(1200px) rotateX(${heroState.ty * 3}deg) rotateY(${-heroState.tx * 3}deg) translate(${heroState.tx * -4}px, ${heroState.ty * -4 + heroState.sy * 0.06}px)`;
     }
-
-    function frame() {
-        if (!running) return;
-        ctx.clearRect(0, 0, w, h);
-
-        for (const p of particles) {
-            const dx = mouse.x - p.x, dy = mouse.y - p.y;
-            if (dx * dx + dy * dy < 180 * 180) {
-                p.vx += dx * 0.00005;
-                p.vy += dy * 0.00005;
-            }
-            const speed = Math.hypot(p.vx, p.vy);
-            if (speed > MAX_SPEED) { p.vx *= MAX_SPEED / speed; p.vy *= MAX_SPEED / speed; }
-            p.x += p.vx; p.y += p.vy;
-            if (p.x < 0 || p.x > w) p.vx *= -1;
-            if (p.y < 0 || p.y > h) p.vy *= -1;
-        }
-
-        ctx.lineWidth = 1;
-        for (let i = 0; i < particles.length; i++) {
-            const a = particles[i];
-            for (let j = i + 1; j < particles.length; j++) {
-                const b = particles[j];
-                const dx = a.x - b.x, dy = a.y - b.y;
-                const d = Math.hypot(dx, dy);
-                if (d < LINK) {
-                    ctx.strokeStyle = `rgba(26, 20, 16, ${(1 - d / LINK) * 0.16})`;
-                    ctx.beginPath();
-                    ctx.moveTo(a.x, a.y);
-                    ctx.lineTo(b.x, b.y);
-                    ctx.stroke();
-                }
-            }
-        }
-
-        ctx.fillStyle = 'rgba(26, 20, 16, 0.32)';
-        for (const p of particles) {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        rafId = requestAnimationFrame(frame);
-    }
-
-    function start() { if (!rafId) { running = true; rafId = requestAnimationFrame(frame); } }
-    function stop() { running = false; if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
-
-    window.addEventListener('mousemove', (e) => {
-        const r = hero.getBoundingClientRect();
-        mouse.x = e.clientX - r.left;
-        mouse.y = e.clientY - r.top;
-    }, { passive: true });
-    hero.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
-    window.addEventListener('resize', resize);
-    document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-    new IntersectionObserver((entries) => entries[0].isIntersecting ? start() : stop(), { threshold: 0 }).observe(hero);
-
-    resize();
-    start();
 }
-
-// ===== Hero headline: sheen after intro + subtle 3D tilt =====
-if (heroH1 && !reduceMotion) {
-    setTimeout(() => {
-        // Spans blijven staan (voorkomt afbreken bij "AI-tools"), alleen hun intro-animatie gaat uit
-        heroH1.querySelectorAll('.hw').forEach(w => {
-            w.style.animation = 'none';
-            w.style.opacity = '1';
-            w.style.transform = 'none';
-        });
-        heroH1.classList.add('sheen');
-    }, 1800);
-}
-if (finePointer && !reduceMotion) {
-    const heroEl = document.querySelector('.hero');
-    const heroContent = document.querySelector('.hero-content');
-    const heroPhoto = document.querySelector('.hero-visual img');
-    if (heroEl && heroContent) {
-        heroEl.addEventListener('mousemove', (e) => {
-            const r = heroEl.getBoundingClientRect();
-            const dx = (e.clientX - r.left) / r.width - 0.5;
-            const dy = (e.clientY - r.top) / r.height - 0.5;
-            heroContent.style.transform = `perspective(1200px) rotateX(${-dy * 2.5}deg) rotateY(${dx * 2.5}deg)`;
-            if (heroPhoto) {
-                heroPhoto.style.transform = `perspective(1200px) rotateX(${dy * 3}deg) rotateY(${-dx * 3}deg) translate(${dx * -8}px, ${dy * -8}px)`;
-            }
-        });
-        heroEl.addEventListener('mouseleave', () => {
-            heroContent.style.transform = '';
-            if (heroPhoto) heroPhoto.style.transform = '';
-        });
-    }
+if (heroEl && finePointer && !reduceMotion) {
+    heroEl.addEventListener('mousemove', (e) => {
+        const r = heroEl.getBoundingClientRect();
+        heroState.tx = (e.clientX - r.left) / r.width - 0.5;
+        heroState.ty = (e.clientY - r.top) / r.height - 0.5;
+        applyHero();
+    });
+    heroEl.addEventListener('mouseleave', () => { heroState.tx = 0; heroState.ty = 0; applyHero(); });
 }
 
 // ===== Hero tagline: typing effect =====
@@ -283,6 +301,43 @@ if (tagline && !reduceMotion) {
             setTimeout(() => cursor.remove(), 3000);
         }
     }, 1400);
+}
+
+// ===== Process timeline: linked to scroll position =====
+const timeline = document.querySelector('.process-timeline');
+const steps = timeline ? [...timeline.querySelectorAll('.process-step')] : [];
+function updateProcess() {
+    if (!timeline) return;
+    if (reduceMotion) {
+        timeline.style.setProperty('--draw', '1');
+        steps.forEach(s => s.classList.add('lit'));
+        return;
+    }
+    const r = timeline.getBoundingClientRect();
+    const p = clamp((window.innerHeight * 0.88 - r.top) / r.height, 0, 1);
+    timeline.style.setProperty('--draw', p.toFixed(3));
+    steps.forEach((s, i) => s.classList.toggle('lit', p >= (i + 0.55) / steps.length));
+}
+
+// ===== Spotlight: section in the middle of the screen is in focus =====
+const spotEls = [...document.querySelectorAll('section.section')];
+function setupSpot() {
+    const on = !reduceMotion && window.innerWidth > 980;
+    spotEls.forEach(s => {
+        s.classList.toggle('spot', on);
+        if (!on) s.style.removeProperty('--focus');
+    });
+}
+function updateSpot() {
+    const vh = window.innerHeight;
+    spotEls.forEach(s => {
+        if (!s.classList.contains('spot')) return;
+        const r = s.getBoundingClientRect();
+        const center = r.top + r.height / 2;
+        // 1 in het midden van het scherm, 0 zodra het midden van de sectie ~55% van de schermhoogte weg is
+        const focus = clamp(1 - Math.abs(center - vh / 2) / (vh * 0.55), 0, 1);
+        s.style.setProperty('--focus', focus.toFixed(3));
+    });
 }
 
 // ===== Service cards: 3D tilt + cursor glow =====
@@ -325,3 +380,26 @@ if (finePointer && !reduceMotion) {
         });
     });
 }
+
+// =====================================================================
+// One scroll handler for everything scroll-linked
+// =====================================================================
+let ticking = false;
+function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+        updateActiveNav();
+        updateProgress();
+        heroState.sy = window.scrollY;
+        applyHero();
+        updateProcess();
+        updateSpot();
+        ticking = false;
+    });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('resize', () => { setupSpot(); onScroll(); });
+window.addEventListener('load', () => { setupSpot(); onScroll(); });
+setupSpot();
+onScroll();
