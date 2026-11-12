@@ -253,7 +253,7 @@ h1 { font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; }
 
 /* ===== Photos ===== */
 .nu-bezig-photo { margin-top: 36px; }
-.nu-bezig-photo img { width: 100%; aspect-ratio: 21 / 8; object-fit: cover; object-position: center 38%; border-radius: 20px; display: block; filter: sepia(0.28) contrast(1.02); }
+.nu-bezig-photo img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; object-position: center 68%; border-radius: 20px; display: block; filter: sepia(0.28) contrast(1.02); }
 @media (max-width: 980px) {
     .nu-bezig-photo img { aspect-ratio: 4 / 3; }
 }
