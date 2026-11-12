@@ -329,7 +329,14 @@ function initHeroFilm(THREE) {
         g.fillStyle = inkA(0.75); g.fillText(text, x + 24, y + 4);
     };
 
+    const texCache = new Map();
     const cardTexture = (def) => {
+        if (texCache.has(def.type)) return texCache.get(def.type);
+        const tex = drawCardTexture(def);
+        texCache.set(def.type, tex);
+        return tex;
+    };
+    const drawCardTexture = (def) => {
         const W = 1360, H = 800;
         const c = document.createElement('canvas'); c.width = W; c.height = H;
         const g = c.getContext('2d');
@@ -506,7 +513,8 @@ function initHeroFilm(THREE) {
         const shadowTex = shadowTexture();
         const cardGeo = new THREE.PlaneGeometry(CW, CH);
         const shadowGeo = new THREE.PlaneGeometry(CW * 1.5, CH * 1.7);
-        defs.forEach((def, i) => {
+        const buildOne = (i) => {
+            const def = defs[i];
             const mat = new THREE.MeshBasicMaterial({ map: cardTexture(def), transparent: true, side: THREE.DoubleSide });
             const shadowMat = new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, opacity: 0, depthWrite: false });
             const group = new THREE.Group();
@@ -527,10 +535,16 @@ function initHeroFilm(THREE) {
             const col = i % COLS, row = Math.floor(i / COLS);
             const local = new THREE.Vector3((col - (COLS - 1) / 2) * (CW + GAP), ((ROWS - 1) / 2 - row) * (CH + GAP), 0);
             cards.push({ group, mat, shadowMat, start, local, delay: 0.4 + i * 0.028, worldPos: new THREE.Vector3(), worldQuat: new THREE.Quaternion(), t: 0 });
-        });
-        buildLine();
-        buildFloaters();
-        buildPhotos();
+        };
+        // Eén kaart per frame tekenen zodat de pagina niet hapert bij het openen; daarna zacht infaden
+        let i = 0;
+        const step = () => {
+            if (i < defs.length) { buildOne(i++); setTimeout(step, 24); return; }
+            hero3d.classList.add('ready');
+            buildPhotos();
+            setTimeout(() => { buildLine(); setTimeout(buildFloaters, 24); }, 24);
+        };
+        setTimeout(step, 0);
     };
 
     // ----- De roze lijn: verbindt de kaarten terwijl ze samenkomen, met twee lopende puntjes

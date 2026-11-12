@@ -303,7 +303,10 @@ h1 { font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; }
 .hero-film-wrap { position: absolute; inset: 0; z-index: 0; }
 /* Vaste 3D-laag achter de hele pagina, met een langzaam bewegende mocha-waas door het zand */
 .scene-3d { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: var(--beige); }
-.hero-3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero-3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 1.4s ease; }
+.hero-3d.ready { opacity: 1; }
+/* Alleen de eerste zin is zichtbaar tot het script de fases overneemt */
+.hero-phase + .hero-phase { opacity: 0; visibility: hidden; }
 .bg-flow, .bg-flow::after { position: absolute; inset: -25%; content: ''; will-change: transform; }
 .bg-flow { background: radial-gradient(ellipse 34% 30% at 22% 28%, rgba(71, 67, 41, 0.22), transparent 70%), radial-gradient(ellipse 38% 34% at 80% 70%, rgba(71, 67, 41, 0.18), transparent 70%), radial-gradient(ellipse 30% 28% at 62% 12%, rgba(236, 229, 217, 1), transparent 70%); animation: flow-a 38s ease-in-out infinite alternate; }
 .bg-flow::after { background: radial-gradient(ellipse 30% 26% at 70% 30%, rgba(71, 67, 41, 0.14), transparent 70%), radial-gradient(ellipse 36% 30% at 18% 78%, rgba(71, 67, 41, 0.16), transparent 70%), radial-gradient(ellipse 26% 24% at 45% 55%, rgba(255, 255, 255, 0.5), transparent 70%); animation: flow-b 47s ease-in-out infinite alternate; }
