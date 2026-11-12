@@ -234,7 +234,7 @@ function initHeroFilm(THREE) {
     const lerp = (a, b, t) => a + (b - a) * t;
 
     // Kleuren uit het merkboek 3.1
-    const ZAND = 0xF5F0E8, ROZE = 0xFC75B4;
+    const ZAND = 0xF5F0E8, ROZE = 0xF7B2CF;
 
     const renderer = new THREE.WebGLRenderer({ canvas: hero3d, alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -260,7 +260,7 @@ function initHeroFilm(THREE) {
     ];
     const COUNT = isWide ? 9 : 6;
     const defs = CARD_DEFS.slice(0, COUNT);
-    const INK = '#1A1410', MOCHA = '#474329', PINK = '#FC75B4', ZANDC = '#F5F0E8', ZAND2 = '#ECE5D9';
+    const INK = '#1A1410', MOCHA = '#474329', PINK = '#F7B2CF', ZANDC = '#F5F0E8', ZAND2 = '#ECE5D9';
     const inkA = (a) => `rgba(26, 20, 16, ${a})`;
     const mochaA = (a) => `rgba(71, 67, 41, ${a})`;
     const MONTHS = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
@@ -324,7 +324,7 @@ function initHeroFilm(THREE) {
     const avatar = (g, x, y, r, i) => { g.fillStyle = [ZAND2, mochaA(0.35), inkA(0.18), mochaA(0.6)][i % 4]; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); };
     const statusPill = (g, x, y, text, kind) => {
         font(g, 500, 13); const w = g.measureText(text).width + 34;
-        g.fillStyle = kind === 'risk' ? 'rgba(252, 117, 180, 0.12)' : kind === 'ok' ? ZAND2 : inkA(0.05); roundRect(g, x, y - 13, w, 24, 12); g.fill();
+        g.fillStyle = kind === 'risk' ? 'rgba(247, 178, 207, 0.12)' : kind === 'ok' ? ZAND2 : inkA(0.05); roundRect(g, x, y - 13, w, 24, 12); g.fill();
         g.fillStyle = kind === 'risk' ? PINK : kind === 'ok' ? MOCHA : inkA(0.3); g.beginPath(); g.arc(x + 13, y - 1, 4, 0, Math.PI * 2); g.fill();
         g.fillStyle = inkA(0.75); g.fillText(text, x + 24, y + 4);
     };
