@@ -286,16 +286,14 @@ h1 { font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; }
     .process-timeline::before { transition: none; }
 }
 
-/* ===== Hero film: full-screen 3D-scène in zand, tekst komt in fases over het beeld ===== */
-.hero.hero-film { height: 100vh; min-height: 560px; padding: 0; background: transparent; overflow: hidden; display: block; z-index: 1; }
-.hero.hero-film .container { display: block; height: 100%; }
-.hero-film-wrap { position: absolute; inset: 0; z-index: 0; }
+/* ===== Hero: kop, foto en knoppen; de dashboards zweven eromheen in de 3D-laag ===== */
+.hero.hero-film { height: auto; min-height: 100vh; padding: 128px 0 64px; background: transparent; overflow: hidden; display: block; z-index: 1; }
+.hero.hero-film .container { display: block; }
+.hero-film-wrap { position: absolute; left: 0; right: 0; top: 0; height: 100vh; z-index: 0; }
 /* Vaste 3D-laag achter de hele pagina, met een langzaam bewegende mocha-waas door het zand */
 .scene-3d { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: var(--beige); }
 .hero-3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 1.4s ease; }
 .hero-3d.ready { opacity: 1; }
-/* Alleen de eerste zin is zichtbaar tot het script de fases overneemt */
-.hero-phase + .hero-phase { opacity: 0; visibility: hidden; }
 .bg-flow, .bg-flow::after { position: absolute; inset: -25%; content: ''; will-change: transform; }
 .bg-flow { background: radial-gradient(ellipse 34% 30% at 22% 28%, rgba(71, 67, 41, 0.22), transparent 70%), radial-gradient(ellipse 38% 34% at 80% 70%, rgba(71, 67, 41, 0.18), transparent 70%), radial-gradient(ellipse 30% 28% at 62% 12%, rgba(236, 229, 217, 1), transparent 70%); animation: flow-a 38s ease-in-out infinite alternate; }
 .bg-flow::after { background: radial-gradient(ellipse 30% 26% at 70% 30%, rgba(71, 67, 41, 0.14), transparent 70%), radial-gradient(ellipse 36% 30% at 18% 78%, rgba(71, 67, 41, 0.16), transparent 70%), radial-gradient(ellipse 26% 24% at 45% 55%, rgba(255, 255, 255, 0.5), transparent 70%); animation: flow-b 47s ease-in-out infinite alternate; }
@@ -303,24 +301,32 @@ h1 { font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; }
 @keyframes flow-b { 0% { transform: translate3d(2%, 3%, 0) rotate(0deg) scale(1.05); } 50% { transform: translate3d(-3%, -1%, 0) rotate(-6deg) scale(1); } 100% { transform: translate3d(2%, -3%, 0) rotate(4deg) scale(1.1); } }
 /* Zachte zand-gloed achter de tekst zodat die leesbaar blijft als er kaarten langs komen */
 .hero-film-wash { position: absolute; inset: 0; pointer-events: none; z-index: 1; background: radial-gradient(ellipse 44% 34% at 50% 38%, rgba(245, 240, 232, 0.92) 0%, rgba(245, 240, 232, 0.55) 55%, rgba(245, 240, 232, 0) 100%); }
-.hero-stage { position: relative; z-index: 3; height: 100%; display: grid; align-items: start; justify-items: center; padding-top: 21vh; }
-.hero-phase { grid-area: 1 / 1; text-align: center; max-width: 880px; padding: 0 8px; will-change: transform, opacity; }
-.hero-phase .hero-headline, .hero-phase-big { font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(2rem, 4.4vw, 3.8rem); line-height: 1.08; letter-spacing: -0.025em; color: var(--text); margin: 0; }
-.hero-phase .hero-headline.sheen { margin: -0.08em -0.06em -0.22em -0.04em; }
-.hero-final { max-width: 620px; }
-.hero-final .hero-subtitle { font-size: 20px; line-height: 1.5; max-width: 560px; margin: 0 auto 28px; opacity: 1; animation: none; color: var(--text); }
+.hero-stage { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.hero-stage .hero-headline { font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(2rem, 4.2vw, 3.6rem); line-height: 1.08; letter-spacing: -0.025em; color: var(--text); max-width: 980px; margin: 0; }
+.hero-stage .hero-headline.sheen { margin: -0.08em -0.06em -0.22em -0.04em; }
+/* Het vak van de foto: de 3D-laag tekent de foto precies hierop; zonder 3D staat de gewone afbeelding er */
+.hero-photo-slot { width: min(540px, 86vw); aspect-ratio: 16 / 10; margin: 40px auto 0; }
+.hero-photo-slot img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 14px; border: 2px solid var(--green); opacity: 0; animation: fade-up 0.8s var(--ease) 0.6s forwards; }
+.hero-photo-slot.gl img { visibility: hidden; }
+.hero-final { max-width: 620px; margin-top: 34px; text-align: center; opacity: 0; animation: fade-up 0.8s var(--ease) 0.9s forwards; }
+.hero-final .hero-subtitle { font-size: 19px; line-height: 1.5; max-width: 560px; margin: 0 auto 24px; opacity: 1; animation: none; color: var(--text); }
 .hero-final .hero-cta { justify-content: center; opacity: 1; animation: none; }
-.hero-final .hero-tagline { opacity: 1; animation: none; margin-top: 36px; min-height: 1.7em; }
-/* De roze lijn: groeit open boven de slotzin */
-.hero-line { display: block; width: 72px; height: 2px; background: var(--green); margin: 0 auto 26px; transform: scaleX(0); transform-origin: center; border-radius: 2px; }
+.hero-final .hero-tagline { opacity: 1; animation: none; margin-top: 30px; min-height: 1.7em; }
+/* De roze lijn: groeit open boven de subtitel */
+.hero-line { display: block; width: 72px; height: 2px; background: var(--green); margin: 0 auto 22px; transform: scaleX(0); transform-origin: center; border-radius: 2px; animation: line-grow 0.9s var(--ease) 1.3s forwards; }
+@keyframes line-grow { to { transform: scaleX(1); } }
 .hero-content { transition: none; transform: none; }
+.hero.hero-film .scroll-indicator { top: calc(100vh - 52px); bottom: auto; }
 @media (max-width: 980px) {
-    .hero-stage { padding-top: 15vh; }
-    .hero-phase .hero-headline, .hero-phase-big { font-size: clamp(1.7rem, 7vw, 2.4rem); }
-    .hero-final .hero-subtitle { font-size: 17px; margin-bottom: 22px; }
-    .hero-final .hero-tagline { margin-top: 24px; font-size: 11px; }
+    .hero.hero-film { padding: 112px 0 48px; }
+    .hero-stage .hero-headline { font-size: clamp(1.7rem, 7vw, 2.4rem); }
+    .hero-photo-slot { margin-top: 28px; }
+    .hero-final .hero-subtitle { font-size: 17px; margin-bottom: 20px; }
+    .hero-final .hero-tagline { margin-top: 22px; font-size: 11px; }
     .hero-film-wash { background: radial-gradient(ellipse 80% 30% at 50% 30%, rgba(245, 240, 232, 0.94) 0%, rgba(245, 240, 232, 0.6) 55%, rgba(245, 240, 232, 0) 100%); }
+    .hero.hero-film .scroll-indicator { display: none; }
 }
+@media (prefers-reduced-motion: reduce) { .hero-line { animation: none; transform: scaleX(1); } .hero-photo-slot img, .hero-final { animation: none; opacity: 1; } }
 /* Lenis: vloeiend scrollen */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }

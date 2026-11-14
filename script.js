@@ -8,17 +8,9 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const navbar = document.getElementById('navbar');
 const heroEl = document.querySelector('.hero');
 
-// ===== Lenis: vloeiend, filmisch scrollen (desktop, gekoppeld aan GSAP) =====
-let lenis = null;
-if (window.Lenis && window.gsap && !reduceMotion && finePointer) {
-    lenis = new Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.9 });
-    if (window.ScrollTrigger) {
-        gsap.registerPlugin(ScrollTrigger);
-        lenis.on('scroll', ScrollTrigger.update);
-    }
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
-}
+// Scrollen is gewoon het scrollen van de browser: direct en zo snel als de bezoeker scrolt (geen smooth-scroll-laag)
+const lenis = null;
+if (window.gsap) gsap.ticker.lagSmoothing(0);
 
 // ===== Hero headline: woorden komen één voor één op, daarna de glans =====
 const heroH1 = document.querySelector('.hero-headline');
@@ -183,17 +175,9 @@ function updateProgress() {
     progressBar.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
 }
 
-// ===== Hero film: full-screen 3D-scène, de camera beweegt op scroll (Three.js + GSAP) =====
+// ===== Hero: kop, foto en zwevende dashboards in één 3D-scène; scrollen gaat gewoon door naar de volgende sectie =====
 let heroPinDistance = 0;
 const hero3d = document.getElementById('hero-3d');
-if (hero3d) {
-    // Altijd bovenaan beginnen zodat de film vanaf het begin speelt, ook na een refresh
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    const toTop = () => { window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true }); };
-    toTop();
-    // De browser herstelt de oude positie pas bij 'load', dus daarna nog een keer
-    window.addEventListener('load', () => { toTop(); if (window.ScrollTrigger) ScrollTrigger.refresh(); });
-}
 
 // Tagline typt zichzelf uit met een roze cursor; start pas als de tagline in beeld komt
 let taglineStarted = false;
@@ -217,16 +201,13 @@ function startTagline() {
         }
     }, 300);
 }
-if (!hero3d) startTagline();
+setTimeout(startTagline, 1600);
 
 function initHeroFilm(THREE) {
     if (!hero3d || !heroEl || !window.gsap) return;
     const LINES = window.THREE_LINES;
     const wrap = hero3d.parentElement;
-    const phases = [...heroEl.querySelectorAll('.hero-phase')];
-    const finalPhase = heroEl.querySelector('.hero-final');
-    const heroLine = heroEl.querySelector('.hero-line');
-    const indicator = heroEl.querySelector('.scroll-indicator');
+    const photoSlot = document.getElementById('hero-photo-slot');
     const isWide = window.innerWidth > 980;
     const rnd = (a, b) => a + Math.random() * (b - a);
     const clamp01 = (x) => Math.max(0, Math.min(1, x));
@@ -573,14 +554,13 @@ function initHeroFilm(THREE) {
     };
     // ----- Na de hero gaat de 3D-laag door: kaarten, ringen en puntjes zweven op diepte langs de rest van de pagina
     const floaters = [];
-    const SCROLL_UNIT = 0.0026; // scène-eenheden per gescrolde pixel
+    const SCROLL_UNIT = 0.0018; // scène-eenheden per gescrolde pixel
     const buildFloaters = () => {
         const ringGeo = new THREE.RingGeometry(0.42, 0.5, 64);
         const discGeo = new THREE.CircleGeometry(0.5, 48);
         const dotGeo = new THREE.CircleGeometry(0.035, 24);
         const miniGeo = new THREE.PlaneGeometry(CW, CH);
-        const pin = Number.isFinite(heroPinDistance) && heroPinDistance > 0 ? heroPinDistance : window.innerHeight * 3.8;
-        const pageUnits = Math.max(8, (document.documentElement.scrollHeight - window.innerHeight - pin) * SCROLL_UNIT);
+        const pageUnits = Math.max(6, (document.documentElement.scrollHeight - window.innerHeight) * SCROLL_UNIT);
         const n = isWide ? 18 : 10;
         for (let i = 0; i < n; i++) {
             const kind = i % 5 === 0 ? 'ring' : i % 5 === 1 ? 'disc' : i % 5 === 2 ? 'dot' : 'card';
@@ -590,12 +570,12 @@ function initHeroFilm(THREE) {
             else if (kind === 'dot') mesh = new THREE.Mesh(dotGeo, new THREE.MeshBasicMaterial({ color: ROZE, transparent: true, opacity: 0.9, depthWrite: false }));
             else mesh = new THREE.Mesh(miniGeo, new THREE.MeshBasicMaterial({ map: cardTexture(CARD_DEFS[i % CARD_DEFS.length]), transparent: true, opacity: 0.6, side: THREE.DoubleSide }));
             const side = i % 2 ? 1 : -1;
-            const depth = rnd(5, 11); // afstand voor de camera
+            const depth = rnd(4.5, 8.5); // afstand voor de camera
             const halfW = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * depth * camera.aspect;
             const base = new THREE.Vector3(
                 side * halfW * rnd(isWide ? 0.82 : 0.6, 1.08),
-                grid.position.y - 2.4 - rnd(0.3, 1) - (i / n) * pageUnits,
-                -2.0 - depth
+                -2.6 - rnd(0.3, 1) - (i / n) * pageUnits,
+                4.2 - depth
             );
             mesh.position.copy(base);
             mesh.scale.setScalar(kind === 'card' ? rnd(0.55, 0.8) : kind === 'dot' ? 1 : rnd(0.7, 1.3));
@@ -723,6 +703,7 @@ function initHeroFilm(THREE) {
                     pencil.renderOrder = 6;
                     mesh.add(pencil);
                 }
+                if (photoSlot) photoSlot.classList.add('gl');
                 photos.push({ mesh, mat, pencil, uni: sketch ? mat.uniforms : null, t0: -1, ...P });
             };
             img.src = P.src;
@@ -793,7 +774,7 @@ function initHeroFilm(THREE) {
             const dz = C.worldPos.z - camera.position.z;
             const near = dz > -0.6 ? 0 : clamp01((C.worldPos.distanceTo(camera.position) - 1.0) / 1.4);
             // Zodra de pagina na de hero verder scrolt, lost het dashboard op en nemen de zwevende vormen het over
-            const away = 1 - clamp01(off / 1.3);
+            const away = 1 - clamp01((off - 0.3) / 0.9);
             C.mat.opacity = near * away;
             C.group.visible = near * away > 0.01;
             C.shadowMat.opacity = 0.5 * t * near * away;
@@ -833,7 +814,14 @@ function initHeroFilm(THREE) {
         }
         // Foto's hangen voor de camera, komen van onder op en schuiven weer weg
         const visH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 4.6;
-        const photoScale = Math.min(1, (visH * camera.aspect * 0.86) / 2.1) * 1.31;
+        // De foto ligt precies op zijn vak in de pagina en scrolt dus gewoon mee
+        const slotR = photoSlot ? photoSlot.getBoundingClientRect() : null;
+        const vw = wrap.clientWidth, vh = wrap.clientHeight;
+        const unitPerPx = visH / vh;
+        const inView = slotR && slotR.bottom > -40 && slotR.top < vh + 40;
+        const photoScale = slotR ? (slotR.width * unitPerPx) / 1.6 : 1;
+        const slotX = slotR ? (slotR.left + slotR.width / 2 - vw / 2) * unitPerPx : 0;
+        const slotY = slotR ? -(slotR.top + slotR.height / 2 - vh / 2) * unitPerPx : 0;
         photos.forEach((P, idx) => {
             if (P.t0 < 0) P.t0 = time;
             const age = time - P.t0;
@@ -854,29 +842,27 @@ function initHeroFilm(THREE) {
                 if (age > 5.5 && !introSeen) { introSeen = true; try { localStorage.setItem('dammy-intro', '1'); } catch (e) {} }
             }
             const tIn = P.from < 0 ? intro : smooth(clamp01((p - P.from) / 0.08));
-            const tOut = smooth(clamp01((p - (P.to - 0.07)) / 0.07));
-            const a = tIn * (1 - tOut);
-            P.mesh.visible = a > 0.01;
+            const a = tIn;
+            P.mesh.visible = a > 0.01 && inView;
             if (!P.mesh.visible) return;
             // Zacht zweven: op en neer, een heel klein beetje kantelen
             const bob = Math.sin(time * 0.55 + idx * 2.1) * 0.045;
-            photoOffset.set(ease.x * 0.06 + Math.cos(time * 0.4 + idx) * 0.02, -0.68 + bob - (1 - tIn) * 0.45 + tOut * 0.3 - ease.y * 0.04, -4.6).applyQuaternion(camera.quaternion).add(camera.position);
+            photoOffset.set(slotX + ease.x * 0.03 + Math.cos(time * 0.4 + idx) * 0.012, slotY + bob * 0.6 - (1 - tIn) * 0.3 - ease.y * 0.02, -4.6).applyQuaternion(camera.quaternion).add(camera.position);
             P.mesh.position.copy(photoOffset);
             P.mesh.quaternion.copy(camera.quaternion);
             P.mesh.rotateY(Math.sin(time * 0.35 + idx) * 0.04 + ease.x * 0.05);
             P.mesh.rotateX(Math.cos(time * 0.3 + idx) * 0.025 - ease.y * 0.03);
-            P.mesh.scale.setScalar(photoScale * (0.94 + tIn * 0.06 + tOut * 0.04));
+            P.mesh.scale.setScalar(photoScale * (0.96 + tIn * 0.04));
             if (P.uni) P.uni.uOpacity.value = a; else P.mat.opacity = a;
         });
         for (const F of floaters) {
-            F.mesh.visible = p > 0.95;
+            F.mesh.visible = true;
             if (!F.mesh.visible) continue;
             F.mesh.position.y = F.base.y + Math.sin(time * 0.35 + F.phase) * 0.12;
             F.mesh.position.x = F.base.x + Math.cos(time * 0.28 + F.phase) * 0.08 + ease.x * 0.15;
             if (F.kind === 'ring') F.mesh.rotation.z = time * F.spin;
             else if (F.kind === 'card') F.mesh.rotation.y = Math.sin(time * F.spin * 2 + F.phase) * 0.25 + ease.x * 0.1;
         }
-        if (p > 0.6) startTagline();
     }
 
     const resize = () => {
@@ -897,7 +883,7 @@ function initHeroFilm(THREE) {
     gsap.ticker.add((time, dt) => {
         if (!running) return;
         frame++;
-        const pastHero = state.p >= 1 && (window.scrollY || 0) > heroPinDistance + window.innerHeight * 0.2;
+        const pastHero = (window.scrollY || 0) > window.innerHeight * 1.1;
         const idle = performance.now() - lastScrollAt > 250;
         if (pastHero && idle && frame % 2) return;
         update(time);
@@ -913,35 +899,6 @@ function initHeroFilm(THREE) {
     });
     document.addEventListener('visibilitychange', () => { running = !document.hidden; });
 
-    // Tekstfases: de kop met de foto, daarna de subtitel met de knoppen boven het dashboard
-    const ph0 = phases[0];
-    gsap.set(finalPhase, { autoAlpha: 0, y: 28 });
-    if (reduceMotion) {
-        state.p = 1;
-        gsap.set(ph0, { autoAlpha: 0 });
-        gsap.set(finalPhase, { autoAlpha: 1, y: 0 });
-        if (heroLine) gsap.set(heroLine, { scaleX: 1 });
-        startTagline();
-        return;
-    }
-    const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
-    tl.to(state, { p: 1, duration: 1 }, 0);
-    if (indicator) tl.to(indicator, { autoAlpha: 0, duration: 0.05 }, 0.02);
-    tl.to(ph0, { autoAlpha: 0, y: -28, duration: 0.12, ease: 'power2.in' }, 0.14);
-    tl.to(finalPhase, { autoAlpha: 1, y: 0, duration: 0.16, ease: 'power2.out' }, 0.5);
-    if (heroLine) tl.fromTo(heroLine, { scaleX: 0 }, { scaleX: 1, duration: 0.14, ease: 'power2.out' }, 0.58);
-    // Het eindbeeld blijft een stuk scroll staan voordat de pagina verder gaat
-    tl.to({}, { duration: 0.22 });
-
-    if (window.ScrollTrigger) {
-        gsap.registerPlugin(ScrollTrigger);
-        ScrollTrigger.config({ ignoreMobileResize: true });
-        const st = ScrollTrigger.create({ trigger: heroEl, start: 'top top', end: '+=150%', pin: true, scrub: 0.9, animation: tl, invalidateOnRefresh: true });
-        heroPinDistance = st.end - st.start;
-        ScrollTrigger.addEventListener('refresh', () => { heroPinDistance = st.end - st.start; resize(); });
-    } else {
-        tl.duration(14).delay(0.8).play();
-    }
 }
 if (window.THREE) initHeroFilm(window.THREE);
 else window.addEventListener('three-ready', () => initHeroFilm(window.THREE), { once: true });
