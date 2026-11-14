@@ -587,7 +587,7 @@ function initHeroFilm(THREE) {
     };
     // ----- Foto's: komen onder de tweede en derde zin omhoog, warm en met zachte hoeken, vast in beeld bij de camera
     const PHOTOS = [
-        { src: 'img/team-gracht.webp', from: -1, to: 0.2 }   // staat er al bij het laden, onder de kop
+        { src: 'img/team-tafel.webp', from: -1, to: 0.2 }   // staat er al bij het laden, onder de kop
     ];
     const photos = [];
     const photoTexture = (img) => {
@@ -600,8 +600,8 @@ function initHeroFilm(THREE) {
         const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
         g.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
         g.restore();
-        // Dunne pastelroze lijn rond de foto
-        g.strokeStyle = '#F7B2CF'; g.lineWidth = 7; roundRect(g, 3.5, 3.5, W - 7, H - 7, 37); g.stroke();
+        // Heel dunne, lichte roze lijn rond de foto: net zichtbaar
+        g.strokeStyle = 'rgba(247, 178, 207, 0.8)'; g.lineWidth = 4; roundRect(g, 2, 2, W - 4, H - 4, 38); g.stroke();
         const tex = new THREE.CanvasTexture(c);
         tex.colorSpace = THREE.SRGBColorSpace;
         tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
@@ -746,12 +746,12 @@ function initHeroFilm(THREE) {
             P.mesh.visible = a > 0.01 && inView;
             if (!P.mesh.visible) return;
             // Zacht zweven: op en neer, een heel klein beetje kantelen
-            const bob = Math.sin(time * 0.55 + idx * 2.1) * 0.045;
-            photoOffset.set(slotX + ease.x * 0.03 + Math.cos(time * 0.4 + idx) * 0.012, slotY + bob - (1 - tIn) * 0.3 - ease.y * 0.02, -4.6).applyQuaternion(camera.quaternion).add(camera.position);
+            const bob = Math.sin(time * 0.45 + idx * 2.1) * 0.016;
+            photoOffset.set(slotX + ease.x * 0.012 + Math.cos(time * 0.33 + idx) * 0.005, slotY + bob - (1 - tIn) * 0.3 - ease.y * 0.008, -4.6).applyQuaternion(camera.quaternion).add(camera.position);
             P.mesh.position.copy(photoOffset);
             P.mesh.quaternion.copy(camera.quaternion);
-            P.mesh.rotateY(Math.sin(time * 0.35 + idx) * 0.04 + ease.x * 0.05);
-            P.mesh.rotateX(Math.cos(time * 0.3 + idx) * 0.025 - ease.y * 0.03);
+            P.mesh.rotateY(Math.sin(time * 0.3 + idx) * 0.012 + ease.x * 0.018);
+            P.mesh.rotateX(Math.cos(time * 0.26 + idx) * 0.008 - ease.y * 0.012);
             P.mesh.scale.setScalar(photoScale * (0.96 + tIn * 0.04));
             P.mat.opacity = a;
         });
