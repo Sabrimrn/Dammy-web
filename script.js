@@ -237,7 +237,10 @@ function initHeroFilm(THREE) {
     const ZAND = 0xF5F0E8, ROZE = 0xF7B2CF;
 
     const renderer = new THREE.WebGLRenderer({ canvas: hero3d, alpha: true, antialias: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    // Resolutie begrensd: boven 1,5x zie je het verschil niet, maar het kost wel het dubbele aan rekenkracht
+    const maxPixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+    let pixelRatio = maxPixelRatio;
+    renderer.setPixelRatio(pixelRatio);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     const scene = new THREE.Scene();
     // Diepte: wat ver weg is lost op in zand
@@ -534,7 +537,7 @@ function initHeroFilm(THREE) {
             // Eindpositie in het raster (lokaal, wordt elk frame naar wereldcoördinaten omgezet)
             const col = i % COLS, row = Math.floor(i / COLS);
             const local = new THREE.Vector3((col - (COLS - 1) / 2) * (CW + GAP), ((ROWS - 1) / 2 - row) * (CH + GAP), 0);
-            cards.push({ group, mat, shadowMat, start, local, delay: 0.4 + i * 0.028, worldPos: new THREE.Vector3(), worldQuat: new THREE.Quaternion(), t: 0 });
+            cards.push({ group, mat, shadowMat, start, local, delay: 0.16 + i * 0.03, worldPos: new THREE.Vector3(), worldQuat: new THREE.Quaternion(), t: 0 });
         };
         // Eén kaart per frame tekenen zodat de pagina niet hapert bij het openen; daarna zacht infaden
         let i = 0;
@@ -604,11 +607,8 @@ function initHeroFilm(THREE) {
     };
     // ----- Foto's: komen onder de tweede en derde zin omhoog, warm en met zachte hoeken, vast in beeld bij de camera
     const PHOTOS = [
-        { src: 'img/team-1.webp', from: -1, to: 0.22 },   // staat er al bij het laden, onder de eerste kop
-        { src: 'img/team-2.webp', from: 0.26, to: 0.5 },
-        { src: 'img/team-3.webp', from: 0.56, to: 0.78 }
+        { src: 'img/team-gracht.webp', from: -1, to: 0.2 }   // staat er al bij het laden, onder de kop
     ];
-    let photoT0 = -1;
     const photos = [];
     const photoTexture = (img) => {
         const W = 1600, H = 1000;
@@ -623,15 +623,85 @@ function initHeroFilm(THREE) {
         g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(236, 214, 182, 0.35)'; g.fillRect(0, 0, W, H);
         g.globalCompositeOperation = 'source-over';
         g.restore();
-        // Rand loopt een beetje over in het zand
-        g.globalCompositeOperation = 'destination-in';
-        const grad = g.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, W * 0.62);
-        grad.addColorStop(0, 'rgba(0,0,0,1)'); grad.addColorStop(1, 'rgba(0,0,0,0.65)');
-        g.fillStyle = grad; g.fillRect(0, 0, W, H);
-        g.globalCompositeOperation = 'source-over';
+        // Dunne pastelroze lijn rond de foto
+        g.strokeStyle = '#F7B2CF'; g.lineWidth = 7; roundRect(g, 3.5, 3.5, W - 7, H - 7, 37); g.stroke();
         const tex = new THREE.CanvasTexture(c);
         tex.colorSpace = THREE.SRGBColorSpace;
         tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        return tex;
+    };
+    // Eerste bezoek: de eerste foto wordt eerst als lijntekening 'getekend' en loopt dan over in de echte foto
+    let introSeen = false;
+    try { introSeen = localStorage.getItem('dammy-intro') === '1'; } catch (e) {}
+    const forceIntro = /[?&]intro=1/.test(location.search);
+    const playIntro = !reduceMotion && (forceIntro || !introSeen);
+    const sketchMaterial = (tex) => new THREE.ShaderMaterial({
+        transparent: true, depthTest: false, depthWrite: false,
+        uniforms: {
+            map: { value: tex },
+            uTexel: { value: new THREE.Vector2(1.6 / 1600, 1.6 / 1000) },
+            uDraw: { value: 0 }, uMix: { value: 0 }, uOpacity: { value: 0 },
+            uInk: { value: new THREE.Color(0x474329) },
+            uPink: { value: new THREE.Color(0xF7B2CF) },
+            uPaper: { value: new THREE.Color(0xFFFFFF) }
+        },
+        vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+        fragmentShader: `
+            #define ROWS 6.0
+            uniform sampler2D map; uniform vec2 uTexel; uniform float uDraw, uMix, uOpacity; uniform vec3 uInk, uPink, uPaper;
+            varying vec2 vUv;
+            float lum(vec2 uv){ return dot(texture2D(map, uv).rgb, vec3(0.299, 0.587, 0.114)); }
+            float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+            float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+                return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y); }
+            void main(){
+                vec4 photo = texture2D(map, vUv);
+                // Contouren uit de foto (Sobel)
+                float tl = lum(vUv + uTexel * vec2(-1.0, 1.0)), tc = lum(vUv + uTexel * vec2(0.0, 1.0)), tr = lum(vUv + uTexel * vec2(1.0, 1.0));
+                float ml = lum(vUv + uTexel * vec2(-1.0, 0.0)), mr = lum(vUv + uTexel * vec2(1.0, 0.0));
+                float bl = lum(vUv + uTexel * vec2(-1.0, -1.0)), bc = lum(vUv + uTexel * vec2(0.0, -1.0)), br = lum(vUv + uTexel * vec2(1.0, -1.0));
+                float gx = -tl - 2.0 * ml - bl + tr + 2.0 * mr + br;
+                float gy = -tl - 2.0 * tc - tr + bl + 2.0 * bc + br;
+                float line = smoothstep(0.07, 0.17, length(vec2(gx, gy)));
+                // Het potlood gaat regel voor regel heen en weer; lijnen verschijnen pas achter de punt
+                float n = noise(vUv * 7.0);
+                float front = vUv.x * 0.62 + (1.0 - vUv.y) * 0.38 + (n - 0.5) * 0.22;
+                float ry = (1.0 - vUv.y) * ROWS + (noise(vUv * vec2(9.0, 3.0)) - 0.5) * 0.55;
+                float ri = clamp(floor(ry), 0.0, ROWS - 1.0);
+                float prog = uDraw * ROWS;
+                float cur = floor(prog), f = fract(prog);
+                float dir = mod(ri, 2.0);
+                float xr = mix(vUv.x, 1.0 - vUv.x, dir);
+                float inRow = 1.0 - smoothstep(f - 0.03, f + 0.015, xr + (n - 0.5) * 0.05);
+                float drawn = ri < cur ? 1.0 : (ri < cur + 1.0 ? inRow : 0.0);
+                drawn = mix(drawn, 1.0, step(0.999, uDraw));
+                // Verse lijnen vlak achter de punt kleuren even roze
+                float cdir = mod(cur, 2.0);
+                vec2 tip = vec2(mix(f, 1.0 - f, cdir), 1.0 - (cur + 0.5) / ROWS);
+                vec2 dd = (vUv - tip) * vec2(1.6, 1.0);
+                float head = exp(-dot(dd, dd) * 28.0) * (1.0 - step(0.999, uDraw));
+                vec3 ink = mix(uInk, uPink, clamp(head * 1.6, 0.0, 1.0));
+                vec3 sketch = mix(uPaper, ink, line * drawn);
+                // Daarna vult de echte foto zich in dezelfde richting
+                float filled = 1.0 - smoothstep(uMix * 1.45 - 0.3, uMix * 1.45, front);
+                vec3 col = mix(sketch, photo.rgb, filled);
+                gl_FragColor = vec4(col, photo.a * uOpacity);
+                #include <colorspace_fragment>
+            }`
+    });
+    const pencilTexture = () => {
+        const c = document.createElement('canvas'); c.width = c.height = 256;
+        const g = c.getContext('2d');
+        g.translate(22, 234); g.rotate(-Math.PI / 4);
+        g.lineJoin = 'round';
+        // Schacht, houten punt, stift
+        g.fillStyle = '#474329'; g.beginPath(); g.roundRect(52, -20, 220, 40, 6); g.fill();
+        g.fillStyle = '#5A5536'; g.fillRect(52, -20, 220, 13);
+        g.fillStyle = '#ECE5D9'; g.strokeStyle = '#474329'; g.lineWidth = 3;
+        g.beginPath(); g.moveTo(0, 0); g.lineTo(54, -20); g.lineTo(54, 20); g.closePath(); g.fill(); g.stroke();
+        g.fillStyle = '#1A1410'; g.beginPath(); g.moveTo(0, 0); g.lineTo(17, -6.3); g.lineTo(17, 6.3); g.closePath(); g.fill();
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
         return tex;
     };
     const buildPhotos = () => {
@@ -639,12 +709,21 @@ function initHeroFilm(THREE) {
         PHOTOS.forEach((P) => {
             const img = new Image();
             img.onload = () => {
-                const mat = new THREE.MeshBasicMaterial({ map: photoTexture(img), transparent: true, opacity: 0, depthTest: false, depthWrite: false });
+                const sketch = P.from < 0 && playIntro;
+                const mat = sketch
+                    ? sketchMaterial(photoTexture(img))
+                    : new THREE.MeshBasicMaterial({ map: photoTexture(img), transparent: true, opacity: 0, depthTest: false, depthWrite: false });
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.renderOrder = 5;
                 mesh.visible = false;
                 root.add(mesh);
-                photos.push({ mesh, mat, ...P });
+                let pencil = null;
+                if (sketch) {
+                    pencil = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.2), new THREE.MeshBasicMaterial({ map: pencilTexture(), transparent: true, opacity: 0, depthTest: false, depthWrite: false }));
+                    pencil.renderOrder = 6;
+                    mesh.add(pencil);
+                }
+                photos.push({ mesh, mat, pencil, uni: sketch ? mat.uniforms : null, t0: -1, ...P });
             };
             img.src = P.src;
         });
@@ -669,8 +748,8 @@ function initHeroFilm(THREE) {
         ease.y += (mouse.y - ease.y) * 0.04;
 
         // Camera: eerst door de tunnel van kaarten, daarna rustig naar het dashboard kijken
-        const fly = smooth(clamp01(p / 0.62));
-        const settle = smooth(clamp01((p - 0.55) / 0.4));
+        const fly = smooth(clamp01(p / 0.5));
+        const settle = smooth(clamp01((p - 0.28) / 0.5));
         const idleX = Math.sin(time * 0.25) * 0.08, idleY = Math.cos(time * 0.2) * 0.05;
         const tunnelX = Math.sin(fly * Math.PI) * 0.45 + idleX;
         const tunnelY = 0.35 - fly * 0.6 + idleY;
@@ -691,7 +770,7 @@ function initHeroFilm(THREE) {
         grid.updateMatrixWorld(true);
 
         for (const C of cards) {
-            const t = smooth(clamp01((p - C.delay) / 0.3));
+            const t = smooth(clamp01((p - C.delay) / 0.4));
             C.t = t;
             // Doelpositie in wereldcoördinaten
             dummy.position.copy(C.local); dummy.rotation.set(0, 0, 0); dummy.scale.setScalar(1);
@@ -722,7 +801,7 @@ function initHeroFilm(THREE) {
 
         // De roze lijn groeit langs de kaarten en lost op als het dashboard staat
         if (line && cards.length) {
-            const grow = smooth(clamp01((p - 0.5) / 0.28));
+            const grow = smooth(clamp01((p - 0.3) / 0.38));
             const fade = 1 - smooth(clamp01((p - 0.84) / 0.08));
             const vis = grow > 0 && fade > 0;
             line.visible = vis;
@@ -755,9 +834,25 @@ function initHeroFilm(THREE) {
         // Foto's hangen voor de camera, komen van onder op en schuiven weer weg
         const visH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 4.6;
         const photoScale = Math.min(1, (visH * camera.aspect * 0.86) / 2.1) * 1.31;
-        if (photoT0 < 0 && photos.length) photoT0 = time;
-        const intro = smooth(clamp01((time - photoT0 - 0.4) / 1.2));
         photos.forEach((P, idx) => {
+            if (P.t0 < 0) P.t0 = time;
+            const age = time - P.t0;
+            // Met tekening: snel in beeld, dan ruim 3 s tekenen en 1,3 s invullen. Zonder: rustig infaden.
+            const intro = P.uni ? smooth(clamp01((age - 0.2) / 0.5)) : smooth(clamp01((age - 0.4) / 1.2));
+            if (P.uni) {
+                const d = clamp01((age - 0.7) / 3.2);
+                P.uni.uDraw.value = d;
+                P.uni.uMix.value = smooth(clamp01((age - 4.1) / 1.3));
+                // Potloodpunt volgt dezelfde regels als de tekening, met een kleine krabbelbeweging
+                const prog = d * 6, cur = Math.min(5, Math.floor(prog)), f = d >= 1 ? 1 : prog - Math.floor(prog);
+                const ux = cur % 2 ? 1 - f : f;
+                const uy = 1 - (cur + 0.5) / 6 + Math.sin(f * 46) * 0.05;
+                P.pencil.position.set((ux - 0.5) * 1.6 + 0.085, (uy - 0.5) * 1.0 + 0.085, 0.01);
+                P.pencil.rotation.z = Math.sin(f * 46) * 0.12;
+                P.pencil.material.opacity = smooth(clamp01((age - 0.5) / 0.3)) * (1 - smooth(clamp01((age - 3.9) / 0.35)));
+                P.pencil.visible = P.pencil.material.opacity > 0.01;
+                if (age > 5.5 && !introSeen) { introSeen = true; try { localStorage.setItem('dammy-intro', '1'); } catch (e) {} }
+            }
             const tIn = P.from < 0 ? intro : smooth(clamp01((p - P.from) / 0.08));
             const tOut = smooth(clamp01((p - (P.to - 0.07)) / 0.07));
             const a = tIn * (1 - tOut);
@@ -771,7 +866,7 @@ function initHeroFilm(THREE) {
             P.mesh.rotateY(Math.sin(time * 0.35 + idx) * 0.04 + ease.x * 0.05);
             P.mesh.rotateX(Math.cos(time * 0.3 + idx) * 0.025 - ease.y * 0.03);
             P.mesh.scale.setScalar(photoScale * (0.94 + tIn * 0.06 + tOut * 0.04));
-            P.mat.opacity = a;
+            if (P.uni) P.uni.uOpacity.value = a; else P.mat.opacity = a;
         });
         for (const F of floaters) {
             F.mesh.visible = p > 0.95;
@@ -781,7 +876,7 @@ function initHeroFilm(THREE) {
             if (F.kind === 'ring') F.mesh.rotation.z = time * F.spin;
             else if (F.kind === 'card') F.mesh.rotation.y = Math.sin(time * F.spin * 2 + F.phase) * 0.25 + ease.x * 0.1;
         }
-        if (p > 0.84) startTagline();
+        if (p > 0.6) startTagline();
     }
 
     const resize = () => {
@@ -795,12 +890,32 @@ function initHeroFilm(THREE) {
     window.addEventListener('resize', resize);
 
     let running = true;
-    gsap.ticker.add((time) => { if (!running) return; update(time); renderer.render(scene, camera); });
+    // Zuinig tekenen: buiten de hero en zonder scrollen volstaat de helft van de beelden,
+    // en op een trage computer zakt de resolutie vanzelf een stapje
+    let lastScrollAt = 0, frame = 0, slowSum = 0, slowN = 0;
+    window.addEventListener('scroll', () => { lastScrollAt = performance.now(); }, { passive: true });
+    gsap.ticker.add((time, dt) => {
+        if (!running) return;
+        frame++;
+        const pastHero = state.p >= 1 && (window.scrollY || 0) > heroPinDistance + window.innerHeight * 0.2;
+        const idle = performance.now() - lastScrollAt > 250;
+        if (pastHero && idle && frame % 2) return;
+        update(time);
+        renderer.render(scene, camera);
+        if (dt > 0 && dt < 120) {
+            slowSum += dt; slowN++;
+            if (slowN >= 50) {
+                const avg = slowSum / slowN; slowSum = 0; slowN = 0;
+                if (avg > 23 && pixelRatio > 0.8) { pixelRatio = Math.max(0.8, pixelRatio - 0.25); renderer.setPixelRatio(pixelRatio); resize(); }
+                else if (avg < 14 && pixelRatio < maxPixelRatio) { pixelRatio = Math.min(maxPixelRatio, pixelRatio + 0.25); renderer.setPixelRatio(pixelRatio); resize(); }
+            }
+        }
+    });
     document.addEventListener('visibilitychange', () => { running = !document.hidden; });
 
-    // Tekstfases: statement voor statement, tot slot de subtitel met de knoppen
-    const [ph0, ph1, ph2] = phases;
-    gsap.set([ph1, ph2, finalPhase], { autoAlpha: 0, y: 28 });
+    // Tekstfases: de kop met de foto, daarna de subtitel met de knoppen boven het dashboard
+    const ph0 = phases[0];
+    gsap.set(finalPhase, { autoAlpha: 0, y: 28 });
     if (reduceMotion) {
         state.p = 1;
         gsap.set(ph0, { autoAlpha: 0 });
@@ -812,20 +927,16 @@ function initHeroFilm(THREE) {
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
     tl.to(state, { p: 1, duration: 1 }, 0);
     if (indicator) tl.to(indicator, { autoAlpha: 0, duration: 0.05 }, 0.02);
-    tl.to(ph0, { autoAlpha: 0, y: -28, duration: 0.08, ease: 'power2.in' }, 0.15);
-    tl.to(ph1, { autoAlpha: 1, y: 0, duration: 0.09, ease: 'power2.out' }, 0.27);
-    tl.to(ph1, { autoAlpha: 0, y: -28, duration: 0.08, ease: 'power2.in' }, 0.47);
-    tl.to(ph2, { autoAlpha: 1, y: 0, duration: 0.09, ease: 'power2.out' }, 0.55);
-    tl.to(ph2, { autoAlpha: 0, y: -28, duration: 0.08, ease: 'power2.in' }, 0.76);
-    tl.to(finalPhase, { autoAlpha: 1, y: 0, duration: 0.1, ease: 'power2.out' }, 0.87);
-    if (heroLine) tl.fromTo(heroLine, { scaleX: 0 }, { scaleX: 1, duration: 0.1, ease: 'power2.out' }, 0.9);
+    tl.to(ph0, { autoAlpha: 0, y: -28, duration: 0.12, ease: 'power2.in' }, 0.14);
+    tl.to(finalPhase, { autoAlpha: 1, y: 0, duration: 0.16, ease: 'power2.out' }, 0.5);
+    if (heroLine) tl.fromTo(heroLine, { scaleX: 0 }, { scaleX: 1, duration: 0.14, ease: 'power2.out' }, 0.58);
     // Het eindbeeld blijft een stuk scroll staan voordat de pagina verder gaat
-    tl.to({}, { duration: 0.32 });
+    tl.to({}, { duration: 0.22 });
 
     if (window.ScrollTrigger) {
         gsap.registerPlugin(ScrollTrigger);
         ScrollTrigger.config({ ignoreMobileResize: true });
-        const st = ScrollTrigger.create({ trigger: heroEl, start: 'top top', end: '+=380%', pin: true, scrub: 1.1, animation: tl, invalidateOnRefresh: true });
+        const st = ScrollTrigger.create({ trigger: heroEl, start: 'top top', end: '+=150%', pin: true, scrub: 0.9, animation: tl, invalidateOnRefresh: true });
         heroPinDistance = st.end - st.start;
         ScrollTrigger.addEventListener('refresh', () => { heroPinDistance = st.end - st.start; resize(); });
     } else {
