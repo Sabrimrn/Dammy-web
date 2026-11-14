@@ -599,9 +599,6 @@ function initHeroFilm(THREE) {
         const s = Math.max(W / img.naturalWidth, H / img.naturalHeight);
         const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
         g.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
-        // Warme sepia-toon
-        g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(236, 214, 182, 0.35)'; g.fillRect(0, 0, W, H);
-        g.globalCompositeOperation = 'source-over';
         g.restore();
         // Dunne pastelroze lijn rond de foto
         g.strokeStyle = '#F7B2CF'; g.lineWidth = 7; roundRect(g, 3.5, 3.5, W - 7, H - 7, 37); g.stroke();
@@ -610,101 +607,18 @@ function initHeroFilm(THREE) {
         tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
         return tex;
     };
-    // Eerste bezoek: de eerste foto wordt eerst als lijntekening 'getekend' en loopt dan over in de echte foto
-    let introSeen = false;
-    try { introSeen = localStorage.getItem('dammy-intro') === '1'; } catch (e) {}
-    const forceIntro = /[?&]intro=1/.test(location.search);
-    const playIntro = !reduceMotion && (forceIntro || !introSeen);
-    const sketchMaterial = (tex) => new THREE.ShaderMaterial({
-        transparent: true, depthTest: false, depthWrite: false,
-        uniforms: {
-            map: { value: tex },
-            uTexel: { value: new THREE.Vector2(1.6 / 1600, 1.6 / 1000) },
-            uDraw: { value: 0 }, uMix: { value: 0 }, uOpacity: { value: 0 },
-            uInk: { value: new THREE.Color(0x474329) },
-            uPink: { value: new THREE.Color(0xF7B2CF) },
-            uPaper: { value: new THREE.Color(0xFFFFFF) }
-        },
-        vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-        fragmentShader: `
-            #define ROWS 6.0
-            uniform sampler2D map; uniform vec2 uTexel; uniform float uDraw, uMix, uOpacity; uniform vec3 uInk, uPink, uPaper;
-            varying vec2 vUv;
-            float lum(vec2 uv){ return dot(texture2D(map, uv).rgb, vec3(0.299, 0.587, 0.114)); }
-            float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-            float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
-                return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y); }
-            void main(){
-                vec4 photo = texture2D(map, vUv);
-                // Contouren uit de foto (Sobel)
-                float tl = lum(vUv + uTexel * vec2(-1.0, 1.0)), tc = lum(vUv + uTexel * vec2(0.0, 1.0)), tr = lum(vUv + uTexel * vec2(1.0, 1.0));
-                float ml = lum(vUv + uTexel * vec2(-1.0, 0.0)), mr = lum(vUv + uTexel * vec2(1.0, 0.0));
-                float bl = lum(vUv + uTexel * vec2(-1.0, -1.0)), bc = lum(vUv + uTexel * vec2(0.0, -1.0)), br = lum(vUv + uTexel * vec2(1.0, -1.0));
-                float gx = -tl - 2.0 * ml - bl + tr + 2.0 * mr + br;
-                float gy = -tl - 2.0 * tc - tr + bl + 2.0 * bc + br;
-                float line = smoothstep(0.07, 0.17, length(vec2(gx, gy)));
-                // Het potlood gaat regel voor regel heen en weer; lijnen verschijnen pas achter de punt
-                float n = noise(vUv * 7.0);
-                float front = vUv.x * 0.62 + (1.0 - vUv.y) * 0.38 + (n - 0.5) * 0.22;
-                float ry = (1.0 - vUv.y) * ROWS + (noise(vUv * vec2(9.0, 3.0)) - 0.5) * 0.55;
-                float ri = clamp(floor(ry), 0.0, ROWS - 1.0);
-                float prog = uDraw * ROWS;
-                float cur = floor(prog), f = fract(prog);
-                float dir = mod(ri, 2.0);
-                float xr = mix(vUv.x, 1.0 - vUv.x, dir);
-                float inRow = 1.0 - smoothstep(f - 0.03, f + 0.015, xr + (n - 0.5) * 0.05);
-                float drawn = ri < cur ? 1.0 : (ri < cur + 1.0 ? inRow : 0.0);
-                drawn = mix(drawn, 1.0, step(0.999, uDraw));
-                // Verse lijnen vlak achter de punt kleuren even roze
-                float cdir = mod(cur, 2.0);
-                vec2 tip = vec2(mix(f, 1.0 - f, cdir), 1.0 - (cur + 0.5) / ROWS);
-                vec2 dd = (vUv - tip) * vec2(1.6, 1.0);
-                float head = exp(-dot(dd, dd) * 28.0) * (1.0 - step(0.999, uDraw));
-                vec3 ink = mix(uInk, uPink, clamp(head * 1.6, 0.0, 1.0));
-                vec3 sketch = mix(uPaper, ink, line * drawn);
-                // Daarna vult de echte foto zich in dezelfde richting
-                float filled = 1.0 - smoothstep(uMix * 1.45 - 0.3, uMix * 1.45, front);
-                vec3 col = mix(sketch, photo.rgb, filled);
-                gl_FragColor = vec4(col, photo.a * uOpacity);
-                #include <colorspace_fragment>
-            }`
-    });
-    const pencilTexture = () => {
-        const c = document.createElement('canvas'); c.width = c.height = 256;
-        const g = c.getContext('2d');
-        g.translate(22, 234); g.rotate(-Math.PI / 4);
-        g.lineJoin = 'round';
-        // Schacht, houten punt, stift
-        g.fillStyle = '#474329'; g.beginPath(); g.roundRect(52, -20, 220, 40, 6); g.fill();
-        g.fillStyle = '#5A5536'; g.fillRect(52, -20, 220, 13);
-        g.fillStyle = '#ECE5D9'; g.strokeStyle = '#474329'; g.lineWidth = 3;
-        g.beginPath(); g.moveTo(0, 0); g.lineTo(54, -20); g.lineTo(54, 20); g.closePath(); g.fill(); g.stroke();
-        g.fillStyle = '#1A1410'; g.beginPath(); g.moveTo(0, 0); g.lineTo(17, -6.3); g.lineTo(17, 6.3); g.closePath(); g.fill();
-        const tex = new THREE.CanvasTexture(c);
-        tex.colorSpace = THREE.SRGBColorSpace;
-        return tex;
-    };
     const buildPhotos = () => {
         const geo = new THREE.PlaneGeometry(1.6, 1.0);
         PHOTOS.forEach((P) => {
             const img = new Image();
             img.onload = () => {
-                const sketch = P.from < 0 && playIntro;
-                const mat = sketch
-                    ? sketchMaterial(photoTexture(img))
-                    : new THREE.MeshBasicMaterial({ map: photoTexture(img), transparent: true, opacity: 0, depthTest: false, depthWrite: false });
+                const mat = new THREE.MeshBasicMaterial({ map: photoTexture(img), transparent: true, opacity: 0, depthTest: false, depthWrite: false, fog: false });
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.renderOrder = 5;
                 mesh.visible = false;
                 root.add(mesh);
-                let pencil = null;
-                if (sketch) {
-                    pencil = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.2), new THREE.MeshBasicMaterial({ map: pencilTexture(), transparent: true, opacity: 0, depthTest: false, depthWrite: false }));
-                    pencil.renderOrder = 6;
-                    mesh.add(pencil);
-                }
                 if (photoSlot) photoSlot.classList.add('gl');
-                photos.push({ mesh, mat, pencil, uni: sketch ? mat.uniforms : null, t0: -1, ...P });
+                photos.push({ mesh, mat, t0: -1, ...P });
             };
             img.src = P.src;
         });
@@ -825,35 +739,21 @@ function initHeroFilm(THREE) {
         photos.forEach((P, idx) => {
             if (P.t0 < 0) P.t0 = time;
             const age = time - P.t0;
-            // Met tekening: snel in beeld, dan ruim 3 s tekenen en 1,3 s invullen. Zonder: rustig infaden.
-            const intro = P.uni ? smooth(clamp01((age - 0.2) / 0.5)) : smooth(clamp01((age - 0.4) / 1.2));
-            if (P.uni) {
-                const d = clamp01((age - 0.7) / 3.2);
-                P.uni.uDraw.value = d;
-                P.uni.uMix.value = smooth(clamp01((age - 4.1) / 1.3));
-                // Potloodpunt volgt dezelfde regels als de tekening, met een kleine krabbelbeweging
-                const prog = d * 6, cur = Math.min(5, Math.floor(prog)), f = d >= 1 ? 1 : prog - Math.floor(prog);
-                const ux = cur % 2 ? 1 - f : f;
-                const uy = 1 - (cur + 0.5) / 6 + Math.sin(f * 46) * 0.05;
-                P.pencil.position.set((ux - 0.5) * 1.6 + 0.085, (uy - 0.5) * 1.0 + 0.085, 0.01);
-                P.pencil.rotation.z = Math.sin(f * 46) * 0.12;
-                P.pencil.material.opacity = smooth(clamp01((age - 0.5) / 0.3)) * (1 - smooth(clamp01((age - 3.9) / 0.35)));
-                P.pencil.visible = P.pencil.material.opacity > 0.01;
-                if (age > 5.5 && !introSeen) { introSeen = true; try { localStorage.setItem('dammy-intro', '1'); } catch (e) {} }
-            }
+            // De foto fadet rustig in en komt daarbij een klein stukje omhoog
+            const intro = smooth(clamp01((age - 0.3) / 1.4));
             const tIn = P.from < 0 ? intro : smooth(clamp01((p - P.from) / 0.08));
             const a = tIn;
             P.mesh.visible = a > 0.01 && inView;
             if (!P.mesh.visible) return;
             // Zacht zweven: op en neer, een heel klein beetje kantelen
             const bob = Math.sin(time * 0.55 + idx * 2.1) * 0.045;
-            photoOffset.set(slotX + ease.x * 0.03 + Math.cos(time * 0.4 + idx) * 0.012, slotY + bob * 0.6 - (1 - tIn) * 0.3 - ease.y * 0.02, -4.6).applyQuaternion(camera.quaternion).add(camera.position);
+            photoOffset.set(slotX + ease.x * 0.03 + Math.cos(time * 0.4 + idx) * 0.012, slotY + bob - (1 - tIn) * 0.3 - ease.y * 0.02, -4.6).applyQuaternion(camera.quaternion).add(camera.position);
             P.mesh.position.copy(photoOffset);
             P.mesh.quaternion.copy(camera.quaternion);
             P.mesh.rotateY(Math.sin(time * 0.35 + idx) * 0.04 + ease.x * 0.05);
             P.mesh.rotateX(Math.cos(time * 0.3 + idx) * 0.025 - ease.y * 0.03);
             P.mesh.scale.setScalar(photoScale * (0.96 + tIn * 0.04));
-            if (P.uni) P.uni.uOpacity.value = a; else P.mat.opacity = a;
+            P.mat.opacity = a;
         });
         for (const F of floaters) {
             F.mesh.visible = true;
