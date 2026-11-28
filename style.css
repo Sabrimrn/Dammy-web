@@ -398,7 +398,7 @@ noscript img { width: 100%; height: 100%; object-fit: cover; }
     .probleem-text { font-size: 1.15rem; line-height: 1.55; }
     /* Menu: logo onderaan */
     .nav-links { padding-bottom: 40px; height: 100dvh; }
-    .nav-links > li.nav-logo-m { display: block; margin-top: auto; align-self: flex-start; font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.2em; color: #000; }
+    .nav-links > li.nav-logo-m { display: block; margin-top: auto; align-self: center; text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.2em; color: #000; }
     /* Partnerlogo's: doorlopende band van links naar rechts */
     .partners-inner { gap: 14px; }
     .partners-list { display: flex; flex-wrap: nowrap; justify-content: flex-start; gap: 0; width: max-content; flex: none; animation: partners-roll 26s linear infinite; }
