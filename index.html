@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
     <link rel="icon" type="image/png" href="favicon-32x32.png">
 
-    <title>Dammy | AI automatisering voor jouw bedrijf</title>
-    <meta name="description" content="Wij bouwen dashboards, data-modellen en AI-integraties voor Nederlandse bedrijven. Op maat, vaste prijs, en gebouwd voor hoe jouw team echt werkt.">
+    <title>AI-bureau in Amsterdam voor het mkb | Dammy</title>
+    <meta name="description" content="Dammy is een AI-bureau in Amsterdam. Wij bouwen AI-tools, dashboards, data-modellen en koppelingen op maat voor het mkb. Vast bedrag, gratis eerste gesprek.">
     <meta name="keywords" content="AI-bureau, AI Amsterdam, AI tools, dashboards, data-modellen, AI-integraties, automatisering, AI voor bedrijven">
     <meta name="author" content="Dammy">
     <meta name="robots" content="index, follow">
@@ -16,14 +16,16 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Dammy">
     <meta property="og:url" content="https://www.dammy.nl/">
-    <meta property="og:title" content="Dammy | AI automatisering voor jouw bedrijf">
-    <meta property="og:description" content="Wij bouwen dashboards, data-modellen en AI-integraties voor Nederlandse bedrijven. Op maat, vaste prijs, gebouwd voor jouw team.">
+    <meta property="og:title" content="AI-bureau in Amsterdam voor het mkb | Dammy">
+    <meta property="og:description" content="Dammy is een AI-bureau in Amsterdam. Wij bouwen AI-tools, dashboards, data-modellen en koppelingen op maat voor het mkb. Vast bedrag, gratis eerste gesprek.">
+    <meta property="og:image" content="https://www.dammy.nl/img/hero-bg.jpg">
     <meta property="og:locale" content="nl_NL">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Dammy | AI automatisering voor jouw bedrijf">
-    <meta name="twitter:description" content="Wij bouwen dashboards, data-modellen en AI-integraties voor Nederlandse bedrijven.">
+    <meta name="twitter:title" content="AI-bureau in Amsterdam voor het mkb | Dammy">
+    <meta name="twitter:description" content="AI-bureau in Amsterdam. AI-tools, dashboards, data-modellen en koppelingen op maat voor het mkb.">
+    <meta name="twitter:image" content="https://www.dammy.nl/img/hero-bg.jpg">
 
     <!-- Structured Data: WebSite + Organization (voor Google site name) -->
     <script type="application/ld+json">
@@ -35,27 +37,37 @@
                 "@id": "https://www.dammy.nl/#website",
                 "url": "https://www.dammy.nl/",
                 "name": "Dammy",
-                "description": "AI automatisering voor jouw bedrijf",
-                "inLanguage": "nl-NL"
+                "alternateName": ["Dammy Solutions", "dammy.nl"],
+                "description": "AI-bureau in Amsterdam voor het mkb",
+                "inLanguage": "nl-NL",
+                "publisher": { "@id": "https://www.dammy.nl/#organization" }
             },
             {
-                "@type": "Organization",
+                "@type": ["Organization", "ProfessionalService"],
                 "@id": "https://www.dammy.nl/#organization",
                 "name": "Dammy",
+                "legalName": "Dammy Solutions",
                 "url": "https://www.dammy.nl/",
                 "logo": "https://www.dammy.nl/favicon-32x32.png",
+                "image": "https://www.dammy.nl/img/hero-bg.jpg",
+                "description": "AI-bureau in Amsterdam dat AI-tools, dashboards, data-modellen en koppelingen op maat bouwt voor het Nederlandse mkb.",
                 "email": "contact@dammy.nl",
+                "identifier": { "@type": "PropertyValue", "propertyID": "KvK", "value": "42058180" },
                 "address": {
                     "@type": "PostalAddress",
                     "addressLocality": "Amsterdam",
                     "addressCountry": "NL"
-                }
+                },
+                "areaServed": [
+                    { "@type": "City", "name": "Amsterdam" },
+                    { "@type": "Country", "name": "Nederland" }
+                ],
+                "knowsAbout": ["AI-tools op maat", "Dashboards", "Data-modellen", "AI-integraties", "Procesautomatisering"]
             }
         ]
     }
     </script>
-
-    <link rel="stylesheet" href="style.css?v=46">
+    <link rel="stylesheet" href="style.css?v=65">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -63,10 +75,6 @@
 <body>
 
     <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
-    <div class="scene-3d" aria-hidden="true">
-        <div class="bg-flow"></div>
-        <canvas class="hero-3d" id="hero-3d"></canvas>
-    </div>
 
     <nav class="navbar" id="navbar">
         <div class="container nav-container">
@@ -84,33 +92,53 @@
         </div>
     </nav>
 
-    <!-- ===== HERO ===== -->
-    <section class="hero hero-film" id="hero">
-        <div class="hero-film-wrap" aria-hidden="true">
-            <div class="hero-film-wash"></div>
+    <!-- ===== HERO: teamfoto als achtergrond ===== -->
+    <section class="hero" id="hero">
+        <div class="hero-bg" aria-hidden="true">
+            <img class="px" alt="" fetchpriority="high" data-sets='[{"mq":"(max-width: 980px)","base":"img/exact/hero-m-","min":640,"max":2080,"step":96,"ratio":0.66757,"pos":0.4},{"base":"img/exact/hero-","min":1280,"max":3840,"step":128,"ratio":1.49796}]' data-pos="0">
+            <noscript><img src="img/hero-bg.jpg" alt=""></noscript>
+            <script>
+/* Foto's pixel voor pixel tonen: kies de versie die net groter is dan het vlak en toon die op ware grootte, zonder herschalen. */
+(function () {
+    function fit(img) {
+        var box = img.parentElement.getBoundingClientRect();
+        if (!box.width || !box.height) return;
+        var dpr = window.devicePixelRatio || 1;
+        var sets = JSON.parse(img.dataset.sets), s = sets[sets.length - 1];
+        for (var i = 0; i < sets.length; i++) { if (!sets[i].mq || matchMedia(sets[i].mq).matches) { s = sets[i]; break; } }
+        var need = Math.max(box.width, box.height * s.ratio) * dpr;
+        var w = Math.min(s.max, Math.max(s.min, s.min + Math.ceil((need - s.min) / s.step) * s.step));
+        var h = Math.round(w / s.ratio);
+        var snap = function (v) { return Math.round(v * dpr) / dpr; };
+        img.style.width = (w / dpr) + 'px';
+        img.style.height = 'auto';
+        img.style.left = (snap(box.left + (box.width - w / dpr) / 2) - box.left) + 'px';
+        var py = box.top + window.scrollY;
+        img.style.top = (snap(py + (box.height - h / dpr) * (s.pos != null ? s.pos : parseFloat(img.dataset.pos || 0))) - py) + 'px';
+        var src = s.base + w + '.webp';
+        if (img.getAttribute('src') !== src) img.src = src;
+    }
+    function all() { var l = document.querySelectorAll('img.px'); for (var i = 0; i < l.length; i++) fit(l[i]); }
+    window.pxFit = all; all();
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(all, 150); });
+    document.addEventListener('DOMContentLoaded', all); window.addEventListener('load', all);
+})();
+</script>
         </div>
-        <div class="container">
-            <div class="hero-stage">
+        <div class="container hero-inner">
+            <div class="hero-content">
+                <span class="section-tag hero-tag"><span class="slash">//</span> AI-bureau in Amsterdam &middot; voor het Nederlandse mkb</span>
                 <h1 class="hero-headline">Wij bouwen AI-tools die jouw team daadwerkelijk gaat gebruiken.</h1>
                 <p class="hero-subtitle">Dashboards, data-modellen en integraties. Gebouwd voor hoe jouw team werkt, niet voor hoe een demo eruitziet.</p>
-                <div class="hero-photo-slot" id="hero-photo-slot">
-                    <img src="img/team-tafel.webp" alt="Het team van Dammy samen aan het werk rond een lage tafel" width="1800" height="1202">
-                </div>
-                <a href="#over-ons" class="hero-scroll-btn" aria-label="Naar beneden scrollen">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-                </a>
-                <div class="hero-final hero-content">
-                    <span class="hero-line"></span>
-                    <div class="hero-cta">
-                        <a href="#contact" class="btn btn-primary"><span>Laten we praten</span></a>
-                        <a href="#aanpak" class="btn btn-ghost"><span>Hoe we werken</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                        </a>
-                    </div>
-                    <p class="hero-tagline">// Gevestigd in Amsterdam. We bouwen AI-tools voor Nederlandse bedrijven die er écht mee aan de slag willen.</p>
+                <div class="hero-cta">
+                    <a href="#contact" class="btn btn-primary"><span>Laten we praten</span></a>
+                    <a href="#aanpak" class="btn btn-ghost"><span>Hoe we werken</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </a>
                 </div>
             </div>
         </div>
+        <p class="hero-tagline"><span class="slash">//</span> Gevestigd in Amsterdam. We bouwen AI-tools voor Nederlandse bedrijven die er écht mee aan de slag willen.</p>
         <a href="#over-ons" class="scroll-indicator" aria-label="Naar beneden scrollen">
             <span class="scroll-text">Scroll</span>
             <span class="scroll-line"></span>
@@ -121,7 +149,7 @@
     <section class="section" id="over-ons">
         <div class="container">
             <div class="quote-block reveal">
-                <span class="section-tag typewriter">// Het probleem</span>
+                <span class="section-tag typewriter"><span class="slash">//</span> 01 — Het probleem</span>
                 <blockquote class="probleem-text">Je team werkt in zes verschillende tools. Niemand vertrouwt de cijfers uit het maandrapport. En elke keer als iemand zegt 'we moeten iets met AI' voelt het als een project van een half jaar. Dat hoeft niet.</blockquote>
             </div>
         </div>
@@ -131,6 +159,7 @@
     <section class="section" id="diensten">
         <div class="container">
             <div class="section-header reveal">
+                <span class="section-tag"><span class="slash">//</span> 02 — Wat we doen</span>
                 <h2>Wat we doen</h2>
                 <p class="section-intro">We bouwen drie soorten dingen. Soms één ervan, soms alle drie tegelijk.</p>
             </div>
@@ -173,6 +202,7 @@
     <section class="section" id="aanpak">
         <div class="container">
             <div class="section-header reveal">
+                <span class="section-tag"><span class="slash">//</span> 03 — Hoe we werken</span>
                 <h2>Hoe we werken</h2>
             </div>
             <div class="process-card reveal">
@@ -187,21 +217,70 @@
         </div>
     </section>
 
-    <!-- ===== Waar we nu mee bezig zijn ===== -->
-    <section class="section" id="nu-bezig">
+    <!-- ===== Team aan tafel ===== -->
+    <section class="team-band" aria-label="Het team van Dammy">
         <div class="container">
-            <div class="nu-bezig-grid reveal">
-                <div class="nu-bezig-heading">
-                    <h2>Waar we nu mee bezig zijn</h2>
-                </div>
-                <div class="nu-bezig-text">
-                    <p>Op dit moment bouwen we voor een handvol Nederlandse bedrijven. Elke klant willen we goed kennen. Daarom nemen we er nu niet te veel tegelijk.</p>
-                    <p>Als je nu met ons begint, zit je in de eerste lichting. Dat betekent: meer directe aandacht dan wanneer we straks voller zitten. We hebben ruimte voor één of twee nieuwe projecten dit kwartaal.</p>
-                </div>
+            <div class="team-band-photo reveal">
+                <img class="px" alt="Het team van Dammy aan tafel" data-sets='[{"base":"img/exact/team-","min":640,"max":3200,"step":128,"ratio":1.49801}]' data-pos="0.62">
+                <noscript><img src="img/team-tafel.jpg" alt="Het team van Dammy aan tafel"></noscript>
             </div>
-            <div class="nu-bezig-photo reveal">
-                <img src="img/team-wide.webp" alt="Het team van Dammy aan tafel" loading="lazy">
+        </div>
+    </section>
+
+    <!-- ===== Veelgestelde vragen ===== -->
+    <section class="section" id="faq">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><span class="slash">//</span> 04 — Veelgestelde vragen</span>
+                <h2>Wat ondernemers ons vragen</h2>
             </div>
+            <div class="faq-list reveal">
+                <details class="faq-item">
+                    <summary><h3>Wat kost het om een AI-tool of dashboard te laten bouwen?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>Dat hangt af van wat er gebouwd moet worden, dus een standaardprijs hebben we niet. Wel werken we altijd met een vast bedrag. Het eerste gesprek van 30 minuten is gratis. Past het, dan krijg je binnen een week een voorstel met wat we bouwen, wat het oplevert, hoe lang het duurt en één bedrag voor de hele scope.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Hoe lang duurt een project?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>De doorlooptijd staat vooraf in het voorstel, zodat je weet waar je aan toe bent. Tijdens het bouwen laten we elke twee weken in een korte demo zien wat er staat. Zo kun je vroeg bijsturen en is er aan het eind geen verrassing.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Onze data is rommelig en staat in verschillende systemen. Kunnen jullie daar iets mee?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>Ja, dat is bij de meeste bedrijven het vertrekpunt. Vaak zit de eerste winst juist in het aan elkaar koppelen van de tools die je al gebruikt, zodat cijfers op één plek kloppen. In het eerste gesprek kijken we wat er is en wat daarmee haalbaar is.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Waarom maatwerk en niet gewoon ChatGPT of een standaardtool?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>Als een bestaande tool je probleem oplost, zeggen we dat. Maatwerk wordt interessant zodra het moet werken met je eigen data, je eigen systemen en de manier waarop jouw team werkt. Dan bouwen we iets dat daar precies op aansluit, in plaats van dat je team zich aanpast aan de tool.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Hoe gaan jullie om met onze bedrijfsgegevens en de AVG?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>Voordat we beginnen leggen we vast welke gegevens we gebruiken, waar ze staan en wie erbij kan. Verwerken we persoonsgegevens, dan sluiten we daar een verwerkersovereenkomst voor af. We gebruiken niet meer data dan nodig is voor wat we bouwen.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Werken jullie alleen voor bedrijven in Amsterdam?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>Nee. Dammy is gevestigd in Amsterdam en werkt voor mkb-bedrijven in heel Nederland. Kennismaken doen we bij jou op kantoor of online.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Voor wat voor bedrijven werken jullie?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>Voor mkb-bedrijven die meer uit hun data en tools willen halen zonder er een eigen IT-afdeling voor op te tuigen. We werken onder andere voor een sportschool, een advocatenkantoor, een coworkingruimte en een organisatie in de sportontwikkeling.</p>
+                </details>
+                <details class="faq-item">
+                    <summary><h3>Wat gebeurt er na de oplevering?</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+                    <p>Dat kies je zelf. We bouwen zo dat jouw team het daarna zelf kan onderhouden. Wil je dat liever niet, dan blijven wij het beheren en verder ontwikkelen.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Partners ===== -->
+    <section class="partners" id="partners" aria-label="Partners">
+        <div class="container partners-inner">
+            <span class="section-tag partners-label"><span class="slash">//</span> Onder andere voor</span>
+            <ul class="partners-list">
+                <li><img class="logo-patricks" src="img/partners/patricksgym.svg" alt="Patricks Gym" loading="lazy"></li>
+                <li><img class="logo-avde" src="img/partners/avde-bold.png" alt="Adnani &amp; Van den Eeckhout Advocaten" loading="lazy"></li>
+                <li><img class="logo-workmode" src="img/partners/workmode.png" alt="Workmode" loading="lazy"></li>
+                <li><img class="logo-isd" src="img/partners/isd.webp" alt="International Sport Development" loading="lazy"></li>
+            </ul>
         </div>
     </section>
 
@@ -210,6 +289,7 @@
         <div class="container">
             <div class="contact-wrapper">
                 <div class="contact-info reveal">
+                    <span class="section-tag"><span class="slash">//</span> 05 — Contact</span>
                     <h2>Laten we praten</h2>
                     <p>Stuur een mail naar <a href="mailto:contact@dammy.nl">contact@dammy.nl</a>, of vul hieronder iets in. We reageren binnen één werkdag.</p>
                     <div class="contact-details">
@@ -233,9 +313,9 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand"><a href="#hero" class="logo"><span class="logo-text">DAMMY.</span></a><p>Amsterdam, Nederland</p></div>
+                <div class="footer-brand"><a href="#hero" class="logo"><span class="logo-text">DAMMY.</span></a><p>AI-bureau in Amsterdam</p></div>
                 <div class="footer-nav">
-                    <div class="footer-col"><h4>Navigatie</h4><a href="#diensten">Wat we doen</a><a href="#aanpak">Hoe we werken</a><a href="#contact">Contact</a></div>
+                    <div class="footer-col"><h4>Navigatie</h4><a href="#diensten">Wat we doen</a><a href="#aanpak">Hoe we werken</a><a href="#faq">Veelgestelde vragen</a><a href="#contact">Contact</a></div>
                     <div class="footer-col"><h4>Contact</h4><a href="mailto:contact@dammy.nl">contact@dammy.nl</a><a href="#contact">Stuur een bericht</a></div>
                 </div>
             </div>
@@ -243,19 +323,6 @@
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script type="importmap">
-        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
-    </script>
-    <script type="module">
-        import * as THREE from 'three';
-        import { Line2 } from 'three/addons/lines/Line2.js';
-        import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
-        import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
-        window.THREE = THREE;
-        window.THREE_LINES = { Line2, LineMaterial, LineGeometry };
-        window.dispatchEvent(new Event('three-ready'));
-    </script>
-    <script src="script.js?v=36"></script>
+    <script src="script.js?v=38"></script>
 </body>
 </html>
