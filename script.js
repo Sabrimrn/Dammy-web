@@ -291,3 +291,17 @@ window.addEventListener('resize', () => { setupSpot(); onScroll(); });
 window.addEventListener('load', () => { setupSpot(); onScroll(); });
 setupSpot();
 onScroll();
+
+// ===== Partnerlogo's: kopie van de rij voor de doorlopende band op telefoon =====
+(function () {
+    const list = document.querySelector('.partners-list');
+    if (!list) return;
+    [...list.children].forEach(li => {
+        const c = li.cloneNode(true);
+        c.classList.add('dup');
+        c.setAttribute('aria-hidden', 'true');
+        const img = c.querySelector('img');
+        if (img) { img.alt = ''; img.loading = 'eager'; }
+        list.appendChild(c);
+    });
+})();
